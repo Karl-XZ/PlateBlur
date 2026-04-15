@@ -1,0 +1,420 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 56;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		B1000000000000000001 /* PlateBlurApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1000000000000000000 /* PlateBlurApp.swift */; };
+		B1000000000000000003 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1000000000000000002 /* ContentView.swift */; };
+		B1000000000000000005 /* PlateBlurViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1000000000000000004 /* PlateBlurViewModel.swift */; };
+		B1000000000000000007 /* PlateDetection.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1000000000000000006 /* PlateDetection.swift */; };
+		B1000000000000000009 /* PlateDetectorPipeline.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1000000000000000008 /* PlateDetectorPipeline.swift */; };
+		B1000000000000000011 /* CoreMLPlateDetector.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1000000000000000010 /* CoreMLPlateDetector.swift */; };
+		B1000000000000000013 /* RectangleCandidateDetector.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1000000000000000012 /* RectangleCandidateDetector.swift */; };
+		B1000000000000000015 /* PlateRedactionRenderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1000000000000000014 /* PlateRedactionRenderer.swift */; };
+		B1000000000000000017 /* EditorCanvasView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1000000000000000016 /* EditorCanvasView.swift */; };
+		B1000000000000000019 /* PhotoLibrarySaver.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1000000000000000018 /* PhotoLibrarySaver.swift */; };
+		B1000000000000000021 /* UIImage+Helpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1000000000000000020 /* UIImage+Helpers.swift */; };
+			B1000000000000000023 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B1000000000000000022 /* Assets.xcassets */; };
+			B1000000000000000025 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B1000000000000000024 /* Preview Assets.xcassets */; };
+			B1000000000000000061 /* PlateBatchModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1000000000000000060 /* PlateBatchModels.swift */; };
+			B1000000000000000063 /* TextPlateDetector.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1000000000000000062 /* TextPlateDetector.swift */; };
+		B1000000000000000065 /* ExportService.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1000000000000000064 /* ExportService.swift */; };
+		B1000000000000000067 /* MediaBridgeViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1000000000000000066 /* MediaBridgeViews.swift */; };
+		B1000000000000000069 /* LicensePlateDetector.mlmodelc in Resources */ = {isa = PBXBuildFile; fileRef = B1000000000000000068 /* LicensePlateDetector.mlmodelc */; };
+		B1000000000000000071 /* AppLocalization.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1000000000000000070 /* AppLocalization.swift */; };
+		B1000000000000000073 /* SamplePhotoLibrary.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1000000000000000072 /* SamplePhotoLibrary.swift */; };
+		B1000000000000000075 /* SamplePhotos in Resources */ = {isa = PBXBuildFile; fileRef = B1000000000000000074 /* SamplePhotos */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		B1000000000000000000 /* PlateBlurApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlateBlurApp.swift; sourceTree = "<group>"; };
+		B1000000000000000002 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		B1000000000000000004 /* PlateBlurViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlateBlurViewModel.swift; sourceTree = "<group>"; };
+		B1000000000000000006 /* PlateDetection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlateDetection.swift; sourceTree = "<group>"; };
+		B1000000000000000008 /* PlateDetectorPipeline.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlateDetectorPipeline.swift; sourceTree = "<group>"; };
+		B1000000000000000010 /* CoreMLPlateDetector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreMLPlateDetector.swift; sourceTree = "<group>"; };
+		B1000000000000000012 /* RectangleCandidateDetector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RectangleCandidateDetector.swift; sourceTree = "<group>"; };
+		B1000000000000000014 /* PlateRedactionRenderer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlateRedactionRenderer.swift; sourceTree = "<group>"; };
+		B1000000000000000016 /* EditorCanvasView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditorCanvasView.swift; sourceTree = "<group>"; };
+		B1000000000000000018 /* PhotoLibrarySaver.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoLibrarySaver.swift; sourceTree = "<group>"; };
+		B1000000000000000020 /* UIImage+Helpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImage+Helpers.swift"; sourceTree = "<group>"; };
+		B1000000000000000022 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		B1000000000000000024 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
+		B1000000000000000026 /* PlateBlur.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PlateBlur.app; sourceTree = BUILT_PRODUCTS_DIR; };
+			B1000000000000000060 /* PlateBatchModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlateBatchModels.swift; sourceTree = "<group>"; };
+			B1000000000000000062 /* TextPlateDetector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextPlateDetector.swift; sourceTree = "<group>"; };
+		B1000000000000000064 /* ExportService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExportService.swift; sourceTree = "<group>"; };
+		B1000000000000000066 /* MediaBridgeViews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MediaBridgeViews.swift; sourceTree = "<group>"; };
+		B1000000000000000068 /* LicensePlateDetector.mlmodelc */ = {isa = PBXFileReference; lastKnownFileType = folder; path = LicensePlateDetector.mlmodelc; sourceTree = "<group>"; };
+		B1000000000000000070 /* AppLocalization.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppLocalization.swift; sourceTree = "<group>"; };
+		B1000000000000000072 /* SamplePhotoLibrary.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SamplePhotoLibrary.swift; sourceTree = "<group>"; };
+		B1000000000000000074 /* SamplePhotos */ = {isa = PBXFileReference; lastKnownFileType = folder; path = SamplePhotos; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		B1000000000000000027 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		B1000000000000000028 = {
+			isa = PBXGroup;
+			children = (
+				B1000000000000000029 /* PlateBlur */,
+				B1000000000000000030 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		B1000000000000000029 /* PlateBlur */ = {
+			isa = PBXGroup;
+			children = (
+				B1000000000000000000 /* PlateBlurApp.swift */,
+				B1000000000000000070 /* AppLocalization.swift */,
+				B1000000000000000002 /* ContentView.swift */,
+				B1000000000000000004 /* PlateBlurViewModel.swift */,
+				B1000000000000000006 /* PlateDetection.swift */,
+				B1000000000000000060 /* PlateBatchModels.swift */,
+				B1000000000000000072 /* SamplePhotoLibrary.swift */,
+				B1000000000000000008 /* PlateDetectorPipeline.swift */,
+				B1000000000000000010 /* CoreMLPlateDetector.swift */,
+				B1000000000000000062 /* TextPlateDetector.swift */,
+				B1000000000000000012 /* RectangleCandidateDetector.swift */,
+				B1000000000000000014 /* PlateRedactionRenderer.swift */,
+					B1000000000000000064 /* ExportService.swift */,
+					B1000000000000000016 /* EditorCanvasView.swift */,
+					B1000000000000000066 /* MediaBridgeViews.swift */,
+					B1000000000000000018 /* PhotoLibrarySaver.swift */,
+					B1000000000000000020 /* UIImage+Helpers.swift */,
+					B1000000000000000068 /* LicensePlateDetector.mlmodelc */,
+					B1000000000000000074 /* SamplePhotos */,
+					B1000000000000000022 /* Assets.xcassets */,
+					B1000000000000000031 /* Preview Content */,
+				);
+			path = PlateBlur;
+			sourceTree = "<group>";
+		};
+		B1000000000000000030 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				B1000000000000000026 /* PlateBlur.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		B1000000000000000031 /* Preview Content */ = {
+			isa = PBXGroup;
+			children = (
+				B1000000000000000024 /* Preview Assets.xcassets */,
+			);
+			path = "Preview Content";
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		B1000000000000000032 /* PlateBlur */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = B1000000000000000033 /* Build configuration list for PBXNativeTarget "PlateBlur" */;
+			buildPhases = (
+				B1000000000000000034 /* Sources */,
+				B1000000000000000027 /* Frameworks */,
+				B1000000000000000035 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = PlateBlur;
+			productName = PlateBlur;
+			productReference = B1000000000000000026 /* PlateBlur.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		B1000000000000000036 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = 1;
+				LastSwiftUpdateCheck = 2600;
+				LastUpgradeCheck = 2610;
+				TargetAttributes = {
+					B1000000000000000032 = {
+						CreatedOnToolsVersion = 26.2;
+					};
+				};
+			};
+			buildConfigurationList = B1000000000000000037 /* Build configuration list for PBXProject "PlateBlur" */;
+			compatibilityVersion = "Xcode 14.0";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = B1000000000000000028;
+			productRefGroup = B1000000000000000030 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				B1000000000000000032 /* PlateBlur */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		B1000000000000000035 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+				files = (
+					B1000000000000000023 /* Assets.xcassets in Resources */,
+					B1000000000000000025 /* Preview Assets.xcassets in Resources */,
+					B1000000000000000069 /* LicensePlateDetector.mlmodelc in Resources */,
+					B1000000000000000075 /* SamplePhotos in Resources */,
+				);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		B1000000000000000034 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				B1000000000000000001 /* PlateBlurApp.swift in Sources */,
+				B1000000000000000071 /* AppLocalization.swift in Sources */,
+				B1000000000000000003 /* ContentView.swift in Sources */,
+				B1000000000000000005 /* PlateBlurViewModel.swift in Sources */,
+				B1000000000000000007 /* PlateDetection.swift in Sources */,
+				B1000000000000000061 /* PlateBatchModels.swift in Sources */,
+				B1000000000000000073 /* SamplePhotoLibrary.swift in Sources */,
+				B1000000000000000009 /* PlateDetectorPipeline.swift in Sources */,
+				B1000000000000000011 /* CoreMLPlateDetector.swift in Sources */,
+				B1000000000000000063 /* TextPlateDetector.swift in Sources */,
+				B1000000000000000013 /* RectangleCandidateDetector.swift in Sources */,
+				B1000000000000000015 /* PlateRedactionRenderer.swift in Sources */,
+				B1000000000000000065 /* ExportService.swift in Sources */,
+				B1000000000000000017 /* EditorCanvasView.swift in Sources */,
+				B1000000000000000067 /* MediaBridgeViews.swift in Sources */,
+				B1000000000000000019 /* PhotoLibrarySaver.swift in Sources */,
+				B1000000000000000021 /* UIImage+Helpers.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		B1000000000000000038 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		B1000000000000000039 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MTL_FAST_MATH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		B1000000000000000040 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = "";
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = PlateBlur;
+				INFOPLIST_KEY_NSCameraUsageDescription = "需要使用相机来拍摄车辆照片，并立即完成车牌打码。";
+				INFOPLIST_KEY_NSPhotoLibraryAddUsageDescription = "需要保存打码后的车辆照片回到相册。";
+				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "需要读取相册中的车辆照片来检测并打码车牌。";
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.example.PlateBlur;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Debug;
+		};
+		B1000000000000000041 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = "";
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = PlateBlur;
+				INFOPLIST_KEY_NSCameraUsageDescription = "需要使用相机来拍摄车辆照片，并立即完成车牌打码。";
+				INFOPLIST_KEY_NSPhotoLibraryAddUsageDescription = "需要保存打码后的车辆照片回到相册。";
+				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "需要读取相册中的车辆照片来检测并打码车牌。";
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.example.PlateBlur;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		B1000000000000000033 /* Build configuration list for PBXNativeTarget "PlateBlur" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				B1000000000000000040 /* Debug */,
+				B1000000000000000041 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		B1000000000000000037 /* Build configuration list for PBXProject "PlateBlur" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				B1000000000000000038 /* Debug */,
+				B1000000000000000039 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = B1000000000000000036 /* Project object */;
+}
