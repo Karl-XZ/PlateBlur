@@ -1,26 +1,49 @@
 import UIKit
 
 actor PlateDetectorPipeline {
-    private let coreMLDetector = CoreMLPlateDetector()
+    private let generalCoreMLDetector = CoreMLPlateDetector(
+        modelResourceName: "LicensePlateDetector",
+        fullFrameConfidenceThreshold: 0.10,
+        tileConfidenceThreshold: 0.10
+    )
+    private let enhancedCoreMLDetector = CoreMLPlateDetector(
+        modelResourceName: "LicensePlateDetectorSwiss",
+        fullFrameConfidenceThreshold: 0.20,
+        tileConfidenceThreshold: 0.20
+    )
     private let textDetector = TextPlateDetector()
     private let rectangleDetector = RectangleCandidateDetector()
 
-    func detect(in image: UIImage, regions: Set<SupportedPlateRegion>) async -> DetectionRunReport {
+    func detect(
+        in image: UIImage,
+        regions: Set<SupportedPlateRegion>,
+        enhancedRecognitionEnabled: Bool
+    ) async -> DetectionRunReport {
         var messages: [String] = []
         var mergedDetections: [PlateDetection] = []
+        var coreMLDetections: [PlateDetection] = []
 
-        if coreMLDetector.isAvailable {
+        let activeCoreMLDetectors: [CoreMLPlateDetector] =
+            enhancedRecognitionEnabled
+                ? [generalCoreMLDetector, enhancedCoreMLDetector]
+                : [generalCoreMLDetector]
+
+        if activeCoreMLDetectors.allSatisfy({ !$0.isAvailable }) {
+            messages.append(AppText.text(.noBundledModel))
+        }
+
+        for detector in activeCoreMLDetectors where detector.isAvailable {
             do {
-                let coreMLDetections = try await coreMLDetector.detectPlates(in: image)
-                if !coreMLDetections.isEmpty {
-                    mergedDetections.append(contentsOf: coreMLDetections)
-                    messages.append(AppText.text(.coreMLFound, coreMLDetections.count))
-                }
+                coreMLDetections.append(contentsOf: try await detector.detectPlates(in: image))
             } catch {
                 messages.append(AppText.text(.coreMLFailed, error.localizedDescription))
             }
-        } else {
-            messages.append(AppText.text(.noBundledModel))
+        }
+
+        let deduplicatedCoreMLDetections = deduplicate(coreMLDetections)
+        if !deduplicatedCoreMLDetections.isEmpty {
+            mergedDetections.append(contentsOf: deduplicatedCoreMLDetections)
+            messages.append(AppText.text(.coreMLFound, deduplicatedCoreMLDetections.count))
         }
 
         do {

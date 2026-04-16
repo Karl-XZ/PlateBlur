@@ -33,9 +33,25 @@ final class CoreMLPlateDetector: PlateDetecting {
     private static let directImageInputName = "image"
     private static let directConfidenceInputName = "confidenceThreshold"
     private static let directIoUInputName = "iouThreshold"
+    private static let modelInputSize = CGSize(width: 640, height: 640)
+    private static let directIoUThreshold = 0.45
+    private static let tileOverlap: CGFloat = 0.40
+    private let modelResourceName: String
+    private let fullFrameConfidenceThreshold: Double
+    private let tileConfidenceThreshold: Double
+
+    init(
+        modelResourceName: String = "LicensePlateDetector",
+        fullFrameConfidenceThreshold: Double = 0.20,
+        tileConfidenceThreshold: Double = 0.20
+    ) {
+        self.modelResourceName = modelResourceName
+        self.fullFrameConfidenceThreshold = fullFrameConfidenceThreshold
+        self.tileConfidenceThreshold = tileConfidenceThreshold
+    }
 
     private lazy var modelURL: URL? = {
-        Bundle.main.url(forResource: "LicensePlateDetector", withExtension: "mlmodelc")
+        Bundle.main.url(forResource: modelResourceName, withExtension: "mlmodelc")
     }()
 
     private lazy var mlModel: MLModel? = {
@@ -114,15 +130,75 @@ final class CoreMLPlateDetector: PlateDetecting {
             throw CoreMLPlateDetectorError.modelUnavailable
         }
 
-        let inputSize = CGSize(width: 640, height: 640)
-        let pixelBuffer = try image.pixelBuffer(targetSize: inputSize)
+        let preparedImage = try image.preparedForProcessing()
+        let fullImageSize = preparedImage.pixelSize
+
+        var mergedDetections = try await directDetections(
+            using: mlModel,
+            image: preparedImage,
+            fullImageSize: fullImageSize,
+            tileOrigin: .zero,
+            confidenceThreshold: fullFrameConfidenceThreshold
+        )
+
+        let tileWindows = Self.makeTileWindows(for: fullImageSize)
+        if tileWindows.count > 1 {
+            for tileWindow in tileWindows {
+                let tileImage = try preparedImage.cropped(to: tileWindow)
+                let tileDetections = try await directDetections(
+                    using: mlModel,
+                    image: tileImage,
+                    fullImageSize: fullImageSize,
+                    tileOrigin: tileWindow.origin,
+                    confidenceThreshold: tileConfidenceThreshold
+                )
+                mergedDetections.append(contentsOf: tileDetections)
+            }
+        }
+
+        return deduplicate(mergedDetections)
+    }
+
+    private func directDetections(
+        using mlModel: MLModel,
+        image: UIImage,
+        fullImageSize: CGSize,
+        tileOrigin: CGPoint,
+        confidenceThreshold: Double
+    ) async throws -> [PlateDetection] {
+        let tileSize = image.pixelSize
+        let pixelBuffer = try image.pixelBuffer(targetSize: Self.modelInputSize)
         let provider = try MLDictionaryFeatureProvider(dictionary: [
             Self.directImageInputName: MLFeatureValue(pixelBuffer: pixelBuffer),
-            Self.directConfidenceInputName: MLFeatureValue(double: 0.25),
-            Self.directIoUInputName: MLFeatureValue(double: 0.45),
+            Self.directConfidenceInputName: MLFeatureValue(double: confidenceThreshold),
+            Self.directIoUInputName: MLFeatureValue(double: Self.directIoUThreshold),
         ])
         let prediction = try await mlModel.prediction(from: provider)
-        return deduplicate(try Self.decodeDirectPrediction(prediction))
+        let localDetections = try Self.decodeDirectPrediction(
+            prediction,
+            minimumConfidence: Float(confidenceThreshold)
+        )
+
+        return localDetections.compactMap { detection in
+            let rect = detection.normalizedRect
+            let globalRect = CGRect(
+                x: (tileOrigin.x + rect.origin.x * tileSize.width) / max(fullImageSize.width, 1),
+                y: (tileOrigin.y + rect.origin.y * tileSize.height) / max(fullImageSize.height, 1),
+                width: rect.size.width * tileSize.width / max(fullImageSize.width, 1),
+                height: rect.size.height * tileSize.height / max(fullImageSize.height, 1)
+            ).clampedToUnit()
+
+            guard globalRect.isMeaningfulUnitRect else {
+                return nil
+            }
+
+            return PlateDetection(
+                id: detection.id,
+                normalizedRect: globalRect,
+                confidence: detection.confidence,
+                source: .coreML
+            )
+        }
     }
 
     private static func makeDetection(from observation: VNRecognizedObjectObservation) -> PlateDetection? {
@@ -149,7 +225,10 @@ final class CoreMLPlateDetector: PlateDetecting {
         )
     }
 
-    private static func decodeDirectPrediction(_ prediction: MLFeatureProvider) throws -> [PlateDetection] {
+    private static func decodeDirectPrediction(
+        _ prediction: MLFeatureProvider,
+        minimumConfidence: Float
+    ) throws -> [PlateDetection] {
         guard let coordinatesValue = prediction.featureValue(for: "coordinates")?.multiArrayValue,
               let confidenceValue = prediction.featureValue(for: "confidence")?.multiArrayValue else {
             throw CoreMLPlateDetectorError.malformedOutput
@@ -183,7 +262,7 @@ final class CoreMLPlateDetector: PlateDetecting {
                 bestScore = max(bestScore, score)
             }
 
-            guard bestScore >= 0.25 else { continue }
+            guard bestScore >= minimumConfidence else { continue }
 
             let rect = CGRect(
                 x: CGFloat(centerX - width / 2),
@@ -209,5 +288,49 @@ final class CoreMLPlateDetector: PlateDetecting {
     private static func confidenceSafeFloat(from array: MLMultiArray, index: Int) -> Float {
         guard index < array.count else { return 0 }
         return array[index].floatValue
+    }
+
+    private static func makeTileWindows(for imageSize: CGSize) -> [CGRect] {
+        let tileSide = adaptiveTileSide(for: imageSize)
+        let width = Int(round(imageSize.width))
+        let height = Int(round(imageSize.height))
+        let tileLength = Int(round(tileSide))
+
+        let xPositions = slidingPositions(length: width, window: tileLength, overlap: tileOverlap)
+        let yPositions = slidingPositions(length: height, window: tileLength, overlap: tileOverlap)
+
+        return yPositions.flatMap { y in
+            xPositions.map { x in
+                CGRect(
+                    x: x,
+                    y: y,
+                    width: min(tileLength, width - x),
+                    height: min(tileLength, height - y)
+                )
+            }
+        }
+    }
+
+    private static func adaptiveTileSide(for imageSize: CGSize) -> CGFloat {
+        let longestEdge = max(imageSize.width, imageSize.height)
+        if longestEdge <= 1600 {
+            return 640
+        }
+        if longestEdge <= 2800 {
+            return 960
+        }
+        return 1280
+    }
+
+    private static func slidingPositions(length: Int, window: Int, overlap: CGFloat) -> [Int] {
+        guard length > window else { return [0] }
+
+        let step = max(1, Int(round(CGFloat(window) * (1 - overlap))))
+        var positions = Array(Swift.stride(from: 0, through: max(length - window, 0), by: step))
+        let tail = length - window
+        if positions.last != tail {
+            positions.append(tail)
+        }
+        return positions
     }
 }

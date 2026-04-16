@@ -28,6 +28,7 @@
 		B1000000000000000071 /* AppLocalization.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1000000000000000070 /* AppLocalization.swift */; };
 		B1000000000000000073 /* SamplePhotoLibrary.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1000000000000000072 /* SamplePhotoLibrary.swift */; };
 		B1000000000000000075 /* SamplePhotos in Resources */ = {isa = PBXBuildFile; fileRef = B1000000000000000074 /* SamplePhotos */; };
+		B1000000000000000077 /* LicensePlateDetectorSwiss.mlmodelc in Resources */ = {isa = PBXBuildFile; fileRef = B1000000000000000076 /* LicensePlateDetectorSwiss.mlmodelc */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -53,6 +54,7 @@
 		B1000000000000000070 /* AppLocalization.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppLocalization.swift; sourceTree = "<group>"; };
 		B1000000000000000072 /* SamplePhotoLibrary.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SamplePhotoLibrary.swift; sourceTree = "<group>"; };
 		B1000000000000000074 /* SamplePhotos */ = {isa = PBXFileReference; lastKnownFileType = folder; path = SamplePhotos; sourceTree = "<group>"; };
+		B1000000000000000076 /* LicensePlateDetectorSwiss.mlmodelc */ = {isa = PBXFileReference; lastKnownFileType = folder; path = LicensePlateDetectorSwiss.mlmodelc; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -95,6 +97,7 @@
 					B1000000000000000018 /* PhotoLibrarySaver.swift */,
 					B1000000000000000020 /* UIImage+Helpers.swift */,
 					B1000000000000000068 /* LicensePlateDetector.mlmodelc */,
+					B1000000000000000076 /* LicensePlateDetectorSwiss.mlmodelc */,
 					B1000000000000000074 /* SamplePhotos */,
 					B1000000000000000022 /* Assets.xcassets */,
 					B1000000000000000031 /* Preview Content */,
@@ -179,6 +182,7 @@
 					B1000000000000000023 /* Assets.xcassets in Resources */,
 					B1000000000000000025 /* Preview Assets.xcassets in Resources */,
 					B1000000000000000069 /* LicensePlateDetector.mlmodelc in Resources */,
+					B1000000000000000077 /* LicensePlateDetectorSwiss.mlmodelc in Resources */,
 					B1000000000000000075 /* SamplePhotos in Resources */,
 				);
 			runOnlyForDeploymentPostprocessing = 0;

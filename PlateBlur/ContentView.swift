@@ -818,6 +818,11 @@ private struct SettingsSheet: View {
                         }
                     }
 
+                    settingsCard(title: text(.enhancedRecognitionTitle), subtitle: text(.enhancedRecognitionDescription)) {
+                        Toggle(text(.enhancedRecognitionEnabled), isOn: $viewModel.enhancedRecognitionEnabled)
+                            .tint(accentBlue)
+                    }
+
                     settingsCard(title: text(.redactionStyleTitle), subtitle: nil) {
                         Picker(text(.redactionStyleTitle), selection: $viewModel.redactionStyle) {
                             ForEach(PlateRedactionStyle.allCases) { style in
@@ -863,7 +868,7 @@ private struct SettingsSheet: View {
                         Toggle(text(.includeOriginalWhenSharing), isOn: $viewModel.includeOriginalWhenSharing)
                     }
 
-                    settingsCard(title: text(.plateRegionsTitle), subtitle: nil) {
+                    settingsCard(title: text(.plateRegionsTitle), subtitle: text(.plateRegionsDescription)) {
                         HStack(spacing: 10) {
                             ForEach(SupportedPlateRegion.allCases) { region in
                                 Button {

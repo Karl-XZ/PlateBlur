@@ -1,0 +1,14 @@
+{
+  "precision_iou50": 0.5333333333333333,
+  "recall_iou50": 0.8421052631578947,
+  "f1_iou50": 0.653061224489796,
+  "image_recall_iou50": 0.8533333333333334,
+  "true_positive": 64,
+  "false_positive": 56,
+  "false_negative": 12,
+  "coco_ap50_95": 0.16902725088984952,
+  "coco_ap50": 0.6250889952900708,
+  "coco_ap75": 0.0203843913803145,
+  "coco_ar100": 0.29605263157894735,
+  "empty_prediction_images": 2
+}

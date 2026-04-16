@@ -1,0 +1,51 @@
+{
+  "coco_metrics": {
+    "images_evaluated": 882,
+    "avg_latency_ms": 15.222156138321996,
+    "p95_latency_ms": 24.014623300000615,
+    "empty_prediction_images": 525,
+    "coco_ap50_95": 0.1608624513482044,
+    "coco_ap50": 0.30778413892441087,
+    "coco_ap75": 0.13324285805877542,
+    "coco_ar100": 0.20920177383592015,
+    "precision_iou50": 0.6681127982646421,
+    "recall_iou50": 0.34146341463414637,
+    "f1_iou50": 0.4519442406456347,
+    "image_recall_iou50": 0.34467120181405897,
+    "true_positive": 308,
+    "false_positive": 153,
+    "false_negative": 594
+  },
+  "scene_metrics": {
+    "PP4AV Switzerland Holdout": {
+      "images_evaluated": 75,
+      "avg_latency_ms": 40.553701653333384,
+      "p95_latency_ms": 51.798675000001275,
+      "empty_prediction_images": 0,
+      "name": "PP4AV Switzerland Holdout",
+      "coco_ap50_95": 0.16907772297639928,
+      "coco_ap50": 0.6206010991855033,
+      "coco_ap75": 0.0203843913803145,
+      "coco_ar100": 0.3,
+      "precision_iou50": 0.31683168316831684,
+      "recall_iou50": 0.8421052631578947,
+      "f1_iou50": 0.46043165467625896,
+      "image_recall_iou50": 0.8533333333333334,
+      "true_positive": 64,
+      "false_positive": 138,
+      "false_negative": 12
+    }
+  },
+  "country_crop_metrics": {
+    "Germany": {
+      "images": 10,
+      "hit_rate": 0.9,
+      "avg_top_score": 0.44296875
+    },
+    "Netherlands": {
+      "images": 10,
+      "hit_rate": 0.9,
+      "avg_top_score": 0.226171875
+    }
+  }
+}

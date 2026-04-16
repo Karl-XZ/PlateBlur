@@ -7,7 +7,8 @@ Current app features:
 - Capture a vehicle photo with the iPhone camera
 - Import one or many photos from the photo library
 - Run a local on-device detection pipeline for Germany, Netherlands, and Switzerland
-- Bundle a Core ML detector named `LicensePlateDetector`
+- Bundle a general Core ML detector named `LicensePlateDetector`
+- Bundle an enhanced small-object Core ML detector named `LicensePlateDetectorSwiss`
 - Fall back to OCR plate-pattern matching and rectangle candidates when the model misses
 - Auto-redact all detected plates with solid, mosaic, or blurred styles
 - Show before/after previews and the current detection source
@@ -25,13 +26,14 @@ Open:
 
 ## Model Integration
 
-The project now ships with a compiled detector at:
+The project now ships with compiled detectors at:
 
 - `PlateBlur/PlateBlur/LicensePlateDetector.mlmodelc`
+- `PlateBlur/PlateBlur/LicensePlateDetectorSwiss.mlmodelc`
 
 To refresh or replace it with a new export:
 
-1. Activate the local evaluation environment: `source /Users/applemima111/Desktop/car/.venv-plate/bin/activate`
+1. Activate the local evaluation environment: `source /Users/applemima111/Desktop/car/.venv/bin/activate`
 2. Run: `python /Users/applemima111/Desktop/car/PlateBlur/tools/export_license_plate_model.py`
 3. Rebuild the Xcode project.
 
@@ -43,10 +45,11 @@ The runtime lookup and detector orchestration live in:
 
 ## Detection Strategy
 
-1. Try a bundled Core ML detector first.
-2. Run Vision text recognition and match country-specific plate patterns.
-3. Fall back to rectangle candidates if the first two stages find nothing.
-4. Let the user fix misses with manual boxes before export.
+1. Run the bundled general Core ML detector for broad plate coverage.
+2. When enhanced recognition is enabled, also run the small-object detector and merge the boxes.
+3. Run Vision text recognition and match country-specific plate patterns.
+4. Fall back to rectangle candidates if the first three stages find nothing.
+5. Let the user fix misses with manual boxes before export.
 
 ## Validation
 
@@ -54,20 +57,24 @@ The runtime lookup and detector orchestration live in:
 - The latest simulator build was verified with `xcodebuild` against the `PlateBlur` scheme.
 - Requirement coverage is tracked in `/Users/applemima111/Desktop/car/PlateBlur/REQUIREMENTS_AUDIT.md`.
 - Measured accuracy is tracked in `/Users/applemima111/Desktop/car/PlateBlur/EVALUATION_REPORT.md`.
+- Switzerland upgrade comparisons are tracked in `/Users/applemima111/Desktop/car/PlateBlur/SWISS_UPGRADE_REPORT.md`.
 
 ## Evaluation Scripts
 
 - Download the public test datasets: `python /Users/applemima111/Desktop/car/PlateBlur/tools/download_eval_datasets.py`
-- Re-export and compile the bundled model: `python /Users/applemima111/Desktop/car/PlateBlur/tools/export_license_plate_model.py`
+- Re-export and compile a bundled model: `python /Users/applemima111/Desktop/car/PlateBlur/tools/export_license_plate_model.py`
+- Build the Swiss/DE-CH focused subset dataset: `python /Users/applemima111/Desktop/car/PlateBlur/tools/build_focus_tile_dataset.py`
+- Prepare the full tiled PP4AV training dataset: `python /Users/applemima111/Desktop/car/PlateBlur/tools/prepare_pp4av_plate_dataset.py`
+- Fine-tune and export a detector: `python /Users/applemima111/Desktop/car/PlateBlur/tools/train_plate_detector.py`
 - Re-run the published metrics: `python /Users/applemima111/Desktop/car/PlateBlur/tools/evaluate_plate_detector.py`
 
 ## Current Measured Results
 
-- Keremberke public test set (`882` images): `AP@0.50 = 0.6433`, `AP@[0.50:0.95] = 0.3140`, `F1@IoU0.50 = 0.7409`
-- Core ML evaluation latency on the local Apple Silicon machine: `7.97 ms` average, `10.46 ms` p95 per image
-- Country crop smoke tests: Germany `100%` hit rate on `10` images, Netherlands `80%` hit rate on `10` images
+- Switzerland-tuned model on the Swiss holdout (`75` images) with hybrid tiled inference at threshold `0.20`: `Recall@IoU0.50 = 0.8158`, `F1@IoU0.50 = 0.6703`
+- App-style routed union on the Swiss holdout (`75` images): `Recall@IoU0.50 = 0.8421`, `F1@IoU0.50 = 0.6531`
+- The baseline general model with hybrid tiled inference on the Swiss holdout (`75` images): `Recall@IoU0.50 = 0.3421`, `F1@IoU0.50 = 0.4602`
 
 ## Known Limits
 
-- Switzerland-specific public test data is still missing from the local evaluation bundle, so the shipped report does not yet contain a Swiss holdout metric.
-- The OCR and rectangle fallbacks are recovery paths, not substitutes for a tuned detector on hard long-tail scenes.
+- The enhanced small-object model should complement the general detector, not replace it globally.
+- The OCR and rectangle fallbacks are recovery paths, not substitutes for tuned detectors on hard long-tail scenes.

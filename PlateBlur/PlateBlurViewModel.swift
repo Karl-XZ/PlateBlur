@@ -18,6 +18,12 @@ final class PlateBlurViewModel: ObservableObject {
     @Published var includeOriginalWhenSharing = false
     @Published var autoDetectAfterImport = true
     @Published var enabledRegions: Set<SupportedPlateRegion> = Set(SupportedPlateRegion.allCases)
+    @Published var enhancedRecognitionEnabled = true {
+        didSet {
+            guard oldValue != enhancedRecognitionEnabled else { return }
+            statusMessage = localized(enhancedRecognitionEnabled ? .enhancedRecognitionOn : .enhancedRecognitionOff)
+        }
+    }
     @Published var sharePayload: SharePayload?
     @Published var appLanguage: AppLanguage {
         didSet {
@@ -327,7 +333,11 @@ final class PlateBlurViewModel: ObservableObject {
         items[index].state = .detecting
         items[index].statusMessage = localized(.runningDetection)
 
-        let report = await pipeline.detect(in: sourceImage, regions: enabledRegions)
+        let report = await pipeline.detect(
+            in: sourceImage,
+            regions: enabledRegions,
+            enhancedRecognitionEnabled: enhancedRecognitionEnabled
+        )
 
         guard let refreshedIndex = items.firstIndex(where: { $0.id == id }) else { return }
 

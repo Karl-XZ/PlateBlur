@@ -1,31 +1,51 @@
 {
   "coco_metrics": {
     "images_evaluated": 882,
-    "avg_latency_ms": 7.965094500000004,
-    "p95_latency_ms": 10.456291899999616,
-    "empty_prediction_images": 234,
-    "coco_ap50_95": 0.3140019599138625,
-    "coco_ap50": 0.6433182307504386,
-    "coco_ap75": 0.2928544882349547,
-    "coco_ar100": 0.3772727272727273,
-    "precision_iou50": 0.8326417704011065,
-    "recall_iou50": 0.6674057649667405,
-    "f1_iou50": 0.7409230769230769,
-    "image_recall_iou50": 0.68140589569161,
-    "true_positive": 602,
-    "false_positive": 121,
-    "false_negative": 300
+    "avg_latency_ms": 15.407675793650794,
+    "p95_latency_ms": 25.00668134999966,
+    "empty_prediction_images": 635,
+    "coco_ap50_95": 0.1270493593240035,
+    "coco_ap50": 0.24130661587033017,
+    "coco_ap75": 0.10408450640893889,
+    "coco_ar100": 0.15631929046563195,
+    "precision_iou50": 0.8254545454545454,
+    "recall_iou50": 0.2516629711751663,
+    "f1_iou50": 0.38572642310960065,
+    "image_recall_iou50": 0.2528344671201814,
+    "true_positive": 227,
+    "false_positive": 48,
+    "false_negative": 675
+  },
+  "scene_metrics": {
+    "PP4AV Switzerland Holdout": {
+      "images_evaluated": 75,
+      "avg_latency_ms": 38.2166500800003,
+      "p95_latency_ms": 43.67040040000276,
+      "empty_prediction_images": 3,
+      "name": "PP4AV Switzerland Holdout",
+      "coco_ap50_95": 0.1655894902786111,
+      "coco_ap50": 0.608060026696306,
+      "coco_ap75": 0.0203843913803145,
+      "coco_ar100": 0.29078947368421054,
+      "precision_iou50": 0.5688073394495413,
+      "recall_iou50": 0.8157894736842105,
+      "f1_iou50": 0.6702702702702703,
+      "image_recall_iou50": 0.8266666666666667,
+      "true_positive": 62,
+      "false_positive": 47,
+      "false_negative": 14
+    }
   },
   "country_crop_metrics": {
     "Germany": {
       "images": 10,
-      "hit_rate": 1.0,
-      "avg_top_score": 0.90126953125
+      "hit_rate": 0.7,
+      "avg_top_score": 0.416796875
     },
     "Netherlands": {
       "images": 10,
-      "hit_rate": 0.8,
-      "avg_top_score": 0.48935546875
+      "hit_rate": 0.5,
+      "avg_top_score": 0.15966796875
     }
   }
 }

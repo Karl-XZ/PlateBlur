@@ -14,6 +14,11 @@ from ultralytics import YOLO
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="Download, export, and compile the bundled license plate detector.")
     parser.add_argument(
+        "--weights-path",
+        default="",
+        help="Optional local YOLO weights path. When set, skip Hugging Face download and export this checkpoint instead.",
+    )
+    parser.add_argument(
         "--repo-id",
         default="Koushim/yolov8-license-plate-detection",
         help="Hugging Face model repo id.",
@@ -38,10 +43,21 @@ def parse_args() -> argparse.Namespace:
         default="/Applications/Xcode.app/Contents/Developer",
         help="Xcode developer directory used for coremlcompiler.",
     )
+    parser.add_argument(
+        "--imgsz",
+        type=int,
+        default=640,
+        help="Core ML export image size.",
+    )
+    parser.add_argument(
+        "--export-name",
+        default="LicensePlateDetector",
+        help="Compiled model bundle name copied into the app model directory.",
+    )
     return parser.parse_args()
 
 
-def compile_mlpackage(mlpackage_path: Path, output_dir: Path, developer_dir: str) -> Path:
+def compile_mlpackage(mlpackage_path: Path, output_dir: Path, developer_dir: str, export_name: str) -> Path:
     build_dir = output_dir / ".coreml-build"
     shutil.rmtree(build_dir, ignore_errors=True)
     build_dir.mkdir(parents=True, exist_ok=True)
@@ -54,7 +70,7 @@ def compile_mlpackage(mlpackage_path: Path, output_dir: Path, developer_dir: str
     )
 
     compiled = build_dir / f"{mlpackage_path.stem}.mlmodelc"
-    target = output_dir / "LicensePlateDetector.mlmodelc"
+    target = output_dir / f"{export_name}.mlmodelc"
     shutil.rmtree(target, ignore_errors=True)
     shutil.move(str(compiled), str(target))
     shutil.rmtree(build_dir, ignore_errors=True)
@@ -66,21 +82,25 @@ def main() -> None:
     model_dir = Path(args.model_dir)
     model_dir.mkdir(parents=True, exist_ok=True)
 
-    weights_path = Path(
-        hf_hub_download(
-            repo_id=args.repo_id,
-            filename=args.filename,
-            local_dir=str(model_dir),
+    if args.weights_path:
+        weights_path = Path(args.weights_path)
+    else:
+        weights_path = Path(
+            hf_hub_download(
+                repo_id=args.repo_id,
+                filename=args.filename,
+                local_dir=str(model_dir),
+            )
         )
-    )
+    
     print(f"Downloaded weights: {weights_path}")
 
     model = YOLO(str(weights_path))
-    mlpackage_path = Path(model.export(format="coreml", imgsz=640, nms=True, int8=False, half=False))
+    mlpackage_path = Path(model.export(format="coreml", imgsz=args.imgsz, nms=True, int8=False, half=False))
     print(f"Exported Core ML package: {mlpackage_path}")
 
     target_dir = Path(args.app_model_dir)
-    compiled_path = compile_mlpackage(mlpackage_path, target_dir, args.developer_dir)
+    compiled_path = compile_mlpackage(mlpackage_path, target_dir, args.developer_dir, args.export_name)
     print(f"Compiled model copied to: {compiled_path}")
 
 

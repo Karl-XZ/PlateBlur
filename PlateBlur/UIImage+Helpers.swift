@@ -15,6 +15,13 @@ enum ImagePreparationError: LocalizedError {
 }
 
 extension UIImage {
+    var pixelSize: CGSize {
+        if let cgImage {
+            return CGSize(width: cgImage.width, height: cgImage.height)
+        }
+        return size
+    }
+
     func preparedForProcessing() throws -> UIImage {
         if imageOrientation == .up, let cgImage {
             return UIImage(cgImage: cgImage, scale: scale, orientation: .up)
@@ -54,6 +61,30 @@ extension UIImage {
             throw ImagePreparationError.invalidImageData
         }
         return resized
+    }
+
+    func cropped(to cropRect: CGRect) throws -> UIImage {
+        let normalized = try preparedForProcessing()
+        guard let cgImage = normalized.cgImage else {
+            throw ImagePreparationError.invalidImageData
+        }
+
+        let scaleX = CGFloat(cgImage.width) / max(normalized.size.width, 1)
+        let scaleY = CGFloat(cgImage.height) / max(normalized.size.height, 1)
+        let pixelRect = CGRect(
+            x: cropRect.origin.x * scaleX,
+            y: cropRect.origin.y * scaleY,
+            width: cropRect.size.width * scaleX,
+            height: cropRect.size.height * scaleY
+        ).integral.intersection(CGRect(x: 0, y: 0, width: cgImage.width, height: cgImage.height))
+
+        guard pixelRect.width > 2,
+              pixelRect.height > 2,
+              let croppedImage = cgImage.cropping(to: pixelRect) else {
+            throw ImagePreparationError.invalidImageData
+        }
+
+        return UIImage(cgImage: croppedImage, scale: 1, orientation: .up)
     }
 
     func pixelBuffer(targetSize: CGSize) throws -> CVPixelBuffer {

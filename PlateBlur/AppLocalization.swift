@@ -69,6 +69,11 @@ enum AppCopy {
     case settingsSubtitle
     case languageTitle
     case languageDescription
+    case enhancedRecognitionTitle
+    case enhancedRecognitionDescription
+    case enhancedRecognitionEnabled
+    case enhancedRecognitionOn
+    case enhancedRecognitionOff
     case redactionStyleTitle
     case paddingTitle
     case exportFormatTitle
@@ -77,6 +82,7 @@ enum AppCopy {
     case autoSaveAfterProcessing
     case includeOriginalWhenSharing
     case plateRegionsTitle
+    case plateRegionsDescription
     case saveDialogTitle
     case saveDialogMessage
     case saveAsNew
@@ -179,7 +185,7 @@ enum AppCopy {
             case .stylesTitle: return "打码样式"
             case .statusTitle: return "状态"
             case .testLibraryTitle: return "测试图片"
-            case .testLibrarySubtitle: return "这里打包了当前评测时用到的公开样张，直接选一张导入看看。"
+            case .testLibrarySubtitle: return "这里打包了当前评测时用到的公开样张，包括几张瑞士道路场景难图，直接选一张导入看看。"
             case .importSample: return "导入这张测试图"
             case .close: return "关闭"
             case .sampleEmpty: return "当前没有打包任何测试图片。"
@@ -188,6 +194,11 @@ enum AppCopy {
             case .settingsSubtitle: return "这里控制语言、导出与自动化行为。"
             case .languageTitle: return "界面语言"
             case .languageDescription: return "默认用中文，英文可以在这里切换。"
+            case .enhancedRecognitionTitle: return "增强识别"
+            case .enhancedRecognitionDescription: return "默认开启。会额外跑一套小目标强化检测，对远距离、路边抓拍和复杂街景更稳。"
+            case .enhancedRecognitionEnabled: return "开启增强识别"
+            case .enhancedRecognitionOn: return "增强识别已开启。重新检测后会对难图启用强化识别。"
+            case .enhancedRecognitionOff: return "增强识别已关闭。重新检测后只保留基础识别。"
             case .redactionStyleTitle: return "打码样式"
             case .paddingTitle: return "车牌外扩"
             case .exportFormatTitle: return "导出格式"
@@ -195,7 +206,8 @@ enum AppCopy {
             case .autoDetectAfterImport: return "导入后自动检测"
             case .autoSaveAfterProcessing: return "检测完成后自动保存"
             case .includeOriginalWhenSharing: return "分享时附带原图"
-            case .plateRegionsTitle: return "车牌地区"
+            case .plateRegionsTitle: return "OCR 车牌地区"
+            case .plateRegionsDescription: return "这里只影响 OCR 兜底规则，不影响增强识别模型。"
             case .saveDialogTitle: return "保存处理结果"
             case .saveDialogMessage: return "选择是另外保存一份，还是直接覆盖原始照片。"
             case .saveAsNew: return "另存新图"
@@ -296,7 +308,7 @@ enum AppCopy {
             case .stylesTitle: return "Redaction Style"
             case .statusTitle: return "Status"
             case .testLibraryTitle: return "Test Samples"
-            case .testLibrarySubtitle: return "These are the public benchmark images currently packed into the app so you can inspect them quickly."
+            case .testLibrarySubtitle: return "These bundled public benchmark images now include several difficult Switzerland road-scene samples for quick inspection."
             case .importSample: return "Import This Sample"
             case .close: return "Close"
             case .sampleEmpty: return "No test samples are bundled right now."
@@ -305,6 +317,11 @@ enum AppCopy {
             case .settingsSubtitle: return "Language, export, and automation controls live here."
             case .languageTitle: return "Interface Language"
             case .languageDescription: return "Chinese is the default. You can switch to English here."
+            case .enhancedRecognitionTitle: return "Enhanced Recognition"
+            case .enhancedRecognitionDescription: return "Enabled by default. Runs an extra small-object detector for distant plates and difficult street scenes."
+            case .enhancedRecognitionEnabled: return "Enable enhanced recognition"
+            case .enhancedRecognitionOn: return "Enhanced recognition is on. Re-run detection to use the stronger difficult-scene path."
+            case .enhancedRecognitionOff: return "Enhanced recognition is off. Re-run detection to keep only the base detector."
             case .redactionStyleTitle: return "Redaction Style"
             case .paddingTitle: return "Plate Padding"
             case .exportFormatTitle: return "Export Format"
@@ -312,7 +329,8 @@ enum AppCopy {
             case .autoDetectAfterImport: return "Auto detect after import"
             case .autoSaveAfterProcessing: return "Auto save after processing"
             case .includeOriginalWhenSharing: return "Include originals when sharing"
-            case .plateRegionsTitle: return "Plate Regions"
+            case .plateRegionsTitle: return "OCR Plate Regions"
+            case .plateRegionsDescription: return "This only affects the OCR fallback rules, not the enhanced recognition model path."
             case .saveDialogTitle: return "Save Processed Image"
             case .saveDialogMessage: return "Choose whether to create a new photo or overwrite the original asset."
             case .saveAsNew: return "Save As New"
