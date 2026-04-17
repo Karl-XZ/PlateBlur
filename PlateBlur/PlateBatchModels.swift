@@ -142,6 +142,44 @@ struct SharePayload: Identifiable {
     let title: String
 }
 
+enum HistoryRecordPhase: String, Codable, CaseIterable {
+    case detected
+    case saved
+    case shared
+    case failed
+
+    func title(in language: AppLanguage) -> String {
+        switch (self, language) {
+        case (.detected, .simplifiedChinese):
+            return "已识别"
+        case (.saved, .simplifiedChinese):
+            return "已保存"
+        case (.shared, .simplifiedChinese):
+            return "已分享"
+        case (.failed, .simplifiedChinese):
+            return "需复查"
+        case (.detected, .english):
+            return "Detected"
+        case (.saved, .english):
+            return "Saved"
+        case (.shared, .english):
+            return "Shared"
+        case (.failed, .english):
+            return "Needs Review"
+        }
+    }
+}
+
+struct HistoryRecord: Identifiable, Codable, Hashable {
+    let id: UUID
+    let itemName: String
+    let timestamp: Date
+    let phase: HistoryRecordPhase
+    let detectionCount: Int
+    let detectorName: String?
+    let thumbnailFileName: String
+}
+
 struct BatchProcessingItem: Identifiable {
     let id: UUID
     var name: String

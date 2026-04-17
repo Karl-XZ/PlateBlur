@@ -1,0 +1,650 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ShieldPlate · 车牌打码台</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="src/styles/main.css" />
+  <link rel="stylesheet" href="src/styles/sidebar.css" />
+  <link rel="stylesheet" href="src/styles/canvas.css" />
+  <link rel="stylesheet" href="src/styles/panels.css" />
+</head>
+<body>
+
+  <!-- ═══════════════════════════════ SIDEBAR ═══════════════════════════════ -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-logo">
+      <svg width="28" height="28" viewBox="0 0 28 28" fill="none">
+        <rect x="1" y="1" width="26" height="26" rx="6" stroke="#FF6B00" stroke-width="2"/>
+        <rect x="6" y="11" width="16" height="6" rx="2" fill="#FF6B00" opacity="0.9"/>
+        <circle cx="8.5" cy="14" r="1.5" fill="#0D0D0D"/>
+        <circle cx="19.5" cy="14" r="1.5" fill="#0D0D0D"/>
+        <line x1="10.5" y1="14" x2="17.5" y2="14" stroke="#0D0D0D" stroke-width="1.2" stroke-linecap="round"/>
+      </svg>
+      <span class="sidebar-logo-text">Shield<strong>Plate</strong></span>
+    </div>
+
+    <nav class="sidebar-nav">
+      <button class="nav-item active" data-tab="upload">
+        <svg class="nav-icon" viewBox="0 0 20 20" fill="none"><path d="M10 3v10M6 7l4-4 4 4M4 14h12a1 1 0 011 1v1H3v-1a1 1 0 011-1z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <span>上传素材</span>
+      </button>
+      <button class="nav-item" data-tab="image">
+        <svg class="nav-icon" viewBox="0 0 20 20" fill="none"><rect x="2" y="3" width="16" height="14" rx="2" stroke="currentColor" stroke-width="1.5"/><circle cx="7" cy="8" r="2" stroke="currentColor" stroke-width="1.5"/><path d="M2 13l4-4 3 3 3-3 4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <span>图片处理</span>
+        <span class="badge" id="imgBadge">0</span>
+      </button>
+      <button class="nav-item" data-tab="video">
+        <svg class="nav-icon" viewBox="0 0 20 20" fill="none"><rect x="2" y="4" width="12" height="12" rx="2" stroke="currentColor" stroke-width="1.5"/><path d="M14 8l4-2v8l-4-2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <span>视频处理</span>
+        <span class="badge" id="vidBadge">0</span>
+      </button>
+      <button class="nav-item" data-tab="watermark">
+        <svg class="nav-icon" viewBox="0 0 20 20" fill="none"><path d="M3 6h14M3 10h14M3 14h14" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><circle cx="15" cy="6" r="2" fill="currentColor" opacity="0.5"/></svg>
+        <span>水印模板</span>
+      </button>
+      <button class="nav-item" data-tab="history">
+        <svg class="nav-icon" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="8" stroke="currentColor" stroke-width="1.5"/><path d="M10 6v4l3 3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+        <span>处理历史</span>
+      </button>
+      <button class="nav-item" data-tab="settings">
+        <svg class="nav-icon" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="3" stroke="currentColor" stroke-width="1.5"/><path d="M10 2v2M10 16v2M2 10h2M16 10h2M4.2 4.2l1.4 1.4M14.4 14.4l1.4 1.4M4.2 15.8l1.4-1.4M14.4 5.6l1.4-1.4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+        <span>设置</span>
+      </button>
+    </nav>
+
+    <div class="sidebar-footer">
+      <div class="storage-bar">
+        <div class="storage-label">
+          <span>存储使用</span><span class="storage-pct">32%</span>
+        </div>
+        <div class="storage-track">
+          <div class="storage-fill" style="width:32%"></div>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- ═══════════════════════════════ MAIN ═══════════════════════════════ -->
+  <main class="main">
+
+    <!-- ── Header ── -->
+    <header class="topbar">
+      <div class="topbar-left">
+        <div class="tab-indicator">
+          <span class="tab-dot"></span>
+          <span class="tab-name" id="tabName">上传素材</span>
+        </div>
+      </div>
+      <div class="topbar-center">
+        <div class="search-wrap">
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><circle cx="6" cy="6" r="4.5" stroke="currentColor" stroke-width="1.3"/><path d="M9.5 9.5L12.5 12.5" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
+          <input type="text" placeholder="搜索历史记录…" class="search-input" />
+        </div>
+      </div>
+      <div class="topbar-right">
+        <button class="icon-btn" title="通知">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 1.5A5.5 5.5 0 002.5 7v3l-1.5 2h15L13.5 10V7A5.5 5.5 0 008 1.5zM6.5 13.5a1.5 1.5 0 003 0" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <div class="user-avatar" title="个人中心">SP</div>
+      </div>
+    </header>
+
+    <!-- ════════════════ PANEL: UPLOAD ════════════════ -->
+    <section class="panel active" id="panel-upload">
+
+      <div class="upload-hero">
+        <div class="upload-zone" id="dropZone">
+          <div class="upload-icon-wrap">
+            <svg class="upload-arrow" width="48" height="48" viewBox="0 0 48 48" fill="none">
+              <circle cx="24" cy="24" r="22" stroke="#FF6B00" stroke-width="2" stroke-dasharray="4 4" opacity="0.6"/>
+              <path d="M24 32V16M16 22l8-8 8 8" stroke="#FF6B00" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M12 38h24" stroke="#FF6B00" stroke-width="2.5" stroke-linecap="round" opacity="0.4"/>
+            </svg>
+          </div>
+          <h2 class="upload-title">拖拽文件到这里</h2>
+          <p class="upload-sub">支持 JPG · PNG · WEBP · MP4 · MOV · AVI，单文件最高 500MB</p>
+          <div class="upload-divider"><span>或</span></div>
+          <button class="btn-primary" id="browseBtn">浏览文件</button>
+          <input type="file" id="fileInput" multiple accept="image/*,video/*" hidden />
+          <p class="upload-hint">批量上传时自动识别所有车牌，支持Ctrl/⌘+多选</p>
+        </div>
+      </div>
+
+      <div class="quick-actions">
+        <div class="qa-card" data-jump="image">
+          <div class="qa-icon" style="--c:#FF6B00;--bg:#FFF3E0">
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><rect x="2" y="3" width="16" height="14" rx="2" stroke="#FF6B00" stroke-width="1.5"/><circle cx="7" cy="8" r="1.5" stroke="#FF6B00" stroke-width="1.3"/><path d="M2 12l4-3 3 3 3-3 4 4" stroke="#FF6B00" stroke-width="1.3" stroke-linecap="round"/></svg>
+          </div>
+          <div class="qa-text">
+            <strong>图片批量打码</strong>
+            <span>一次上传最多100张，自动识别全部车牌</span>
+          </div>
+          <svg class="qa-arrow" width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M6 3l5 5-5 5" stroke="#999" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+        <div class="qa-card" data-jump="video">
+          <div class="qa-icon" style="--c:#00B0FF;--bg:#E0F7FF">
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><rect x="2" y="5" width="12" height="10" rx="2" stroke="#00B0FF" stroke-width="1.5"/><path d="M14 8l4-2v8l-4-2" stroke="#00B0FF" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </div>
+          <div class="qa-text">
+            <strong>视频逐帧跟踪</strong>
+            <span>运动车牌全程覆盖，支持时间轴精确定位</span>
+          </div>
+          <svg class="qa-arrow" width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M6 3l5 5-5 5" stroke="#999" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+        <div class="qa-card" data-jump="watermark">
+          <div class="qa-icon" style="--c:#00C853;--bg:#E8F5E9">
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M3 6h14M3 10h14M3 14h14" stroke="#00C853" stroke-width="1.5" stroke-linecap="round"/><circle cx="15" cy="6" r="2" fill="#00C853" opacity="0.6"/></svg>
+          </div>
+          <div class="qa-text">
+            <strong>品牌水印模板</strong>
+            <span>预设样式 + 自定义模板，隐私与品牌兼顾</span>
+          </div>
+          <svg class="qa-arrow" width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M6 3l5 5-5 5" stroke="#999" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+      </div>
+
+      <!-- Stats row -->
+      <div class="stats-row">
+        <div class="stat-card">
+          <div class="stat-num" id="statProcessed">0</div>
+          <div class="stat-label">已处理</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-num" id="statBatch">0</div>
+          <div class="stat-label">批量任务</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-num" id="statDetect">0</div>
+          <div class="stat-label">车牌识别</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-num">99.2<span>%</span></div>
+          <div class="stat-label">识别准确率</div>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- ════════════════ PANEL: IMAGE ════════════════ -->
+    <section class="panel" id="panel-image">
+      <div class="image-layout">
+        <!-- Canvas Area -->
+        <div class="canvas-wrap" id="imageCanvas">
+          <div class="canvas-empty">
+            <svg width="64" height="64" viewBox="0 0 64 64" fill="none">
+              <rect x="4" y="8" width="56" height="48" rx="6" stroke="#333" stroke-width="1.5" stroke-dasharray="4 4"/>
+              <path d="M24 32h16M32 24v16" stroke="#333" stroke-width="1.5" stroke-linecap="round"/>
+            </svg>
+            <p>上传图片后在画布中预览并调整</p>
+          </div>
+        </div>
+
+        <!-- Right: Detection Results -->
+        <div class="detection-panel">
+          <div class="panel-header">
+            <span class="panel-title">检测结果</span>
+            <span class="panel-count" id="plateCount">0 个车牌</span>
+          </div>
+          <div class="detection-list" id="detectionList">
+            <div class="detection-empty">
+              <svg width="40" height="40" viewBox="0 0 40 40" fill="none"><circle cx="20" cy="20" r="18" stroke="#333" stroke-width="1.5" stroke-dasharray="3 3"/><path d="M14 20h12M20 14v12" stroke="#333" stroke-width="1.5" stroke-linecap="round"/></svg>
+              <p>暂无检测结果</p>
+            </div>
+          </div>
+
+          <!-- Processing Options -->
+          <div class="panel-header" style="margin-top:20px">
+            <span class="panel-title">打码样式</span>
+          </div>
+          <div class="blur-styles">
+            <button class="style-btn active" data-style="blur">
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><rect x="1" y="1" width="14" height="14" rx="2" fill="url(#blurGrad)"/><defs><linearGradient id="blurGrad" x1="1" y1="1" x2="15" y2="15"><stop stop-color="#aaa"/><stop offset="1" stop-color="#ddd"/></linearGradient></defs></svg>
+              <span>模糊</span>
+            </button>
+            <button class="style-btn" data-style="mosaic">
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><rect x="1" y="1" width="14" height="14" rx="2" fill="#666"/><rect x="1" y="1" width="5" height="5" fill="#999"/><rect x="6" y="1" width="4" height="4" fill="#555"/><rect x="10" y="1" width="5" height="5" fill="#888"/><rect x="1" y="6" width="4" height="4" fill="#777"/><rect x="5" y="6" width="5" height="5" fill="#555"/><rect x="10" y="5" width="4" height="5" fill="#666"/></svg>
+              <span>马赛克</span>
+            </button>
+            <button class="style-btn" data-style="block">
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><rect x="1" y="5" width="14" height="6" rx="1" fill="#222"/></svg>
+              <span>色块</span>
+            </button>
+            <button class="style-btn" data-style="brand">
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><rect x="1" y="1" width="14" height="14" rx="2" fill="#FF6B00" opacity="0.2"/><text x="8" y="11" text-anchor="middle" font-size="6" fill="#FF6B00" font-family="sans-serif">品牌</text></svg>
+              <span>品牌水印</span>
+            </button>
+          </div>
+
+          <div class="intensity-row">
+            <label class="intensity-label">强度</label>
+            <input type="range" class="intensity-slider" id="intensitySlider" min="1" max="10" value="6" />
+            <span class="intensity-val" id="intensityVal">6</span>
+          </div>
+
+          <div class="panel-header" style="margin-top:20px">
+            <span class="panel-title">批量设置</span>
+          </div>
+          <div class="batch-options">
+            <label class="toggle-row">
+              <span>自动识别所有车牌</span>
+              <label class="toggle"><input type="checkbox" checked /><span class="toggle-track"><span class="toggle-thumb"></span></span></label>
+            </label>
+            <label class="toggle-row">
+              <span>处理后自动下载</span>
+              <label class="toggle"><input type="checkbox" /><span class="toggle-track"><span class="toggle-thumb"></span></span></label>
+            </label>
+            <label class="toggle-row">
+              <span>保留 EXIF 信息</span>
+              <label class="toggle"><input type="checkbox" /><span class="toggle-track"><span class="toggle-thumb"></span></span></label>
+            </label>
+          </div>
+
+          <div class="action-row action-row-grid">
+            <button class="btn-secondary" id="addPlateBtn">添加车牌框</button>
+            <button class="btn-secondary" id="resetPlatesBtn">重新识别</button>
+            <button class="btn-secondary" id="downloadCurrentImageBtn">下载当前</button>
+            <button class="btn-primary" id="processImagesBtn">
+              <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M2 7h10M7 2l5 5-5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              处理全部图片
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Thumbnail Strip -->
+      <div class="thumb-strip" id="imageThumbStrip">
+        <div class="thumb-strip-label">已上传 · <span id="thumbCount">0</span> 张</div>
+        <div class="thumb-scroll" id="thumbScroll"></div>
+      </div>
+    </section>
+
+    <!-- ════════════════ PANEL: VIDEO ════════════════ -->
+    <section class="panel" id="panel-video">
+      <div class="video-layout">
+        <!-- Video Preview -->
+        <div class="video-canvas-wrap">
+          <video id="videoPreview" class="video-preview" controls></video>
+          <div class="video-empty" id="videoEmpty">
+            <svg width="64" height="64" viewBox="0 0 64 64" fill="none">
+              <rect x="4" y="12" width="40" height="40" rx="4" stroke="#333" stroke-width="1.5" stroke-dasharray="4 4"/>
+              <path d="M44 28l16-8v24l-16-8" stroke="#333" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            <p>上传视频后在画布中预览</p>
+          </div>
+          <!-- Timeline -->
+          <div class="video-timeline" id="videoTimeline">
+            <div class="timeline-track" id="timelineTrack">
+              <div class="timeline-progress" id="timelineProgress"></div>
+              <div class="timeline-markers" id="timelineMarkers"></div>
+              <div class="timeline-playhead" id="timelinePlayhead"></div>
+            </div>
+            <div class="timeline-controls">
+              <span class="time-display" id="timeDisplay">00:00 / 00:00</span>
+              <div class="playback-btns">
+                <button class="playback-btn" id="playBtn" title="播放">
+                  <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M4 2.5l10 5.5-10 5.5z"/></svg>
+                </button>
+                <button class="playback-btn" id="pauseBtn" title="暂停" style="display:none">
+                  <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><rect x="3" y="2" width="4" height="12" rx="1"/><rect x="9" y="2" width="4" height="12" rx="1"/></svg>
+                </button>
+                <button class="playback-btn" id="stopBtn" title="停止">
+                  <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><rect x="3" y="3" width="10" height="10" rx="1"/></svg>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Video Right Panel -->
+        <div class="video-panel">
+          <div class="panel-header">
+            <span class="panel-title">视频队列</span>
+            <span class="panel-count" id="videoQueueCount">0 个视频</span>
+          </div>
+          <div class="video-queue" id="videoQueue">
+            <div class="track-empty">
+              <p>上传视频后可在这里切换当前任务</p>
+            </div>
+          </div>
+
+          <div class="panel-header" style="margin-top:20px">
+            <span class="panel-title">车牌追踪</span>
+            <span class="plate-track-count" id="plateTrackCount">0 个追踪点</span>
+          </div>
+          <div class="track-list" id="trackList">
+            <div class="track-empty">
+              <p>在视频时间轴上添加车牌追踪点</p>
+            </div>
+          </div>
+
+          <div class="panel-header" style="margin-top:20px">
+            <span class="panel-title">视频处理设置</span>
+          </div>
+          <div class="video-settings">
+            <div class="setting-row">
+              <label>打码样式</label>
+              <select class="setting-select" id="videoStyleSelect">
+                <option value="blur">模糊</option>
+                <option value="mosaic">马赛克</option>
+                <option value="block">色块</option>
+                <option value="brand">品牌水印</option>
+              </select>
+            </div>
+            <div class="setting-row">
+              <label>覆盖宽度</label>
+              <div class="range-wrap">
+                <input type="range" class="setting-range" id="vidWidthRange" min="80" max="300" value="160" />
+                <span class="range-val" id="vidWidthVal">160px</span>
+              </div>
+            </div>
+            <div class="setting-row">
+              <label>覆盖高度</label>
+              <div class="range-wrap">
+                <input type="range" class="setting-range" id="vidHeightRange" min="30" max="120" value="60" />
+                <span class="range-val" id="vidHeightVal">60px</span>
+              </div>
+            </div>
+            <div class="setting-row">
+              <label>模糊强度</label>
+              <div class="range-wrap">
+                <input type="range" class="setting-range" id="vidBlurRange" min="1" max="20" value="10" />
+                <span class="range-val" id="vidBlurVal">10</span>
+              </div>
+            </div>
+            <div class="setting-row">
+              <label>保留视频音频</label>
+              <label class="toggle">
+                <input type="checkbox" id="keepVideoAudioToggle" checked />
+                <span class="toggle-track"><span class="toggle-thumb"></span></span>
+              </label>
+            </div>
+          </div>
+
+          <div class="video-job-card" id="videoJobCard">
+            <div class="video-job-head">
+              <span class="video-job-title">处理进度</span>
+              <span class="video-job-pct" id="videoJobPct">0%</span>
+            </div>
+            <div class="video-job-track">
+              <div class="video-job-fill" id="videoJobFill"></div>
+            </div>
+            <p class="video-job-sub" id="videoJobSub">上传视频并添加追踪点后，可逐帧加水印并导出结果。</p>
+          </div>
+
+          <div class="action-row action-row-grid" style="margin-top:auto">
+            <button class="btn-secondary" id="detectCurrentFrameBtn">识别当前帧</button>
+            <button class="btn-secondary" id="addTrackBtn">添加追踪点</button>
+            <button class="btn-secondary" id="downloadCurrentVideoBtn">下载结果</button>
+            <button class="btn-primary" id="processVideoBtn">
+              <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M2 7h10M7 2l5 5-5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              处理视频
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ════════════════ PANEL: WATERMARK ════════════════ -->
+    <section class="panel" id="panel-watermark">
+      <div class="watermark-layout">
+        <div class="wm-templates">
+          <div class="panel-header">
+            <span class="panel-title">预设模板</span>
+          </div>
+          <div class="template-grid" id="templateGrid">
+            <div class="template-card active" data-tpl="solid">
+              <div class="tpl-preview" style="background:#222;border-radius:4px;display:flex;align-items:center;justify-content:center;height:60px">
+                <span style="color:#fff;font-size:11px;font-family:monospace;font-weight:700">京A·12345</span>
+              </div>
+              <span class="tpl-name">纯色遮挡</span>
+            </div>
+            <div class="template-card" data-tpl="blur">
+              <div class="tpl-preview" style="background:linear-gradient(135deg,#888,#ccc);border-radius:4px;display:flex;align-items:center;justify-content:center;height:60px">
+                <span style="color:#fff;font-size:11px;font-family:monospace;font-weight:700;filter:blur(3px)">京A·12345</span>
+              </div>
+              <span class="tpl-name">模糊遮挡</span>
+            </div>
+            <div class="template-card" data-tpl="mosaic">
+              <div class="tpl-preview" style="background:#666;border-radius:4px;display:flex;align-items:center;justify-content:center;height:60px">
+                <span style="color:#999;font-size:11px;font-family:monospace;font-weight:700">京A·12345</span>
+              </div>
+              <span class="tpl-name">马赛克</span>
+            </div>
+            <div class="template-card" data-tpl="brand">
+              <div class="tpl-preview" style="background:#FF6B00;border-radius:4px;display:flex;align-items:center;justify-content:center;height:60px">
+                <span style="color:#fff;font-size:11px;font-weight:700">品牌水印</span>
+              </div>
+              <span class="tpl-name">品牌水印</span>
+            </div>
+            <div class="template-card" data-tpl="logo">
+              <div class="tpl-preview" style="background:#1a1a2e;border-radius:4px;display:flex;align-items:center;justify-content:center;height:60px;gap:6px">
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><rect x="1" y="1" width="14" height="14" rx="3" stroke="#FF6B00" stroke-width="1.5"/></svg>
+                <span style="color:#FF6B00;font-size:11px;font-weight:700">LOGO</span>
+              </div>
+              <span class="tpl-name">Logo水印</span>
+            </div>
+            <div class="template-card" data-tpl="stripe">
+              <div class="tpl-preview" style="background:#111;border-radius:4px;display:flex;align-items:center;justify-content:center;height:60px">
+                <div style="background:#FF6B00;padding:2px 8px;border-radius:2px"><span style="color:#fff;font-size:10px;font-weight:700">车商名称</span></div>
+              </div>
+              <span class="tpl-name">水印条</span>
+            </div>
+          </div>
+
+          <div class="panel-header" style="margin-top:24px">
+            <span class="panel-title">自定义水印</span>
+          </div>
+          <div class="custom-wm">
+            <div class="form-group">
+              <label>品牌文字</label>
+              <input type="text" class="form-input" id="wmText" placeholder="例如：XX二手车行" />
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label>字体颜色</label>
+                <div class="color-row">
+                  <input type="color" class="color-picker" id="wmColor" value="#FF6B00" />
+                  <input type="text" class="form-input color-hex" id="wmColorHex" value="#FF6B00" />
+                </div>
+              </div>
+              <div class="form-group">
+                <label>背景颜色</label>
+                <div class="color-row">
+                  <input type="color" class="color-picker" id="wmBgColor" value="#111111" />
+                  <input type="text" class="form-input color-hex" id="wmBgColorHex" value="#111111" />
+                </div>
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label>字体大小</label>
+                <input type="number" class="form-input" id="wmFontSize" value="12" min="8" max="48" />
+              </div>
+              <div class="form-group">
+                <label>圆角</label>
+                <input type="number" class="form-input" id="wmRadius" value="4" min="0" max="20" />
+              </div>
+            </div>
+            <div class="form-group">
+              <label>透明度</label>
+              <div class="range-wrap">
+                <input type="range" class="setting-range" id="wmOpacity" min="0" max="100" value="85" />
+                <span class="range-val" id="wmOpacityVal">85%</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Watermark Preview -->
+        <div class="wm-preview-area">
+          <div class="panel-header">
+            <span class="panel-title">水印预览</span>
+            <span class="panel-count">实时渲染</span>
+          </div>
+          <div class="wm-preview-canvas" id="wmPreviewCanvas">
+            <div class="wm-plate-demo" id="wmPlateDemo">
+              <div class="wm-badge" id="wmBadge">
+                <span id="wmBadgeText">XX二手车行</span>
+              </div>
+            </div>
+          </div>
+          <div class="wm-export-row">
+            <button class="btn-secondary" id="saveTemplateBtn">保存为模板</button>
+            <button class="btn-primary" id="applyWMBtn">
+              <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M2 7l3.5 3.5L12 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              应用水印
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ════════════════ PANEL: HISTORY ════════════════ -->
+    <section class="panel" id="panel-history">
+      <div class="history-toolbar">
+        <div class="filter-tabs">
+          <button class="filter-tab active">全部</button>
+          <button class="filter-tab">图片</button>
+          <button class="filter-tab">视频</button>
+          <button class="filter-tab">失败</button>
+        </div>
+        <div class="history-actions">
+          <button class="btn-ghost" id="exportAllBtn">
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M7 2v7M4 6l3 3 3-3M2 10v1a1 1 0 001 1h8a1 1 0 001-1v-1" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            导出全部
+          </button>
+          <button class="btn-ghost danger" id="clearHistoryBtn">清空历史</button>
+        </div>
+      </div>
+      <div class="history-grid" id="historyGrid">
+        <!-- Populated by JS -->
+        <div class="history-empty">
+          <svg width="64" height="64" viewBox="0 0 64 64" fill="none">
+            <circle cx="32" cy="32" r="28" stroke="#333" stroke-width="1.5" stroke-dasharray="4 4"/>
+            <path d="M32 20v14l8 8" stroke="#333" stroke-width="1.5" stroke-linecap="round"/>
+          </svg>
+          <p>暂无处理记录</p>
+          <p class="history-empty-sub">上传素材并处理后，结果将显示在这里</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ════════════════ PANEL: SETTINGS ════════════════ -->
+    <section class="panel" id="panel-settings">
+      <div class="settings-layout">
+        <div class="settings-group">
+          <div class="settings-group-title">处理设置</div>
+          <div class="settings-list">
+            <div class="setting-item">
+              <div class="setting-info">
+                <span class="setting-name">默认打码强度</span>
+                <span class="setting-desc">全局默认的模糊/马赛克强度值</span>
+              </div>
+              <div class="range-wrap">
+                <input type="range" class="setting-range" id="setBlurDefault" min="1" max="20" value="10" />
+                <span class="range-val" id="setBlurVal">10</span>
+              </div>
+            </div>
+            <div class="setting-item">
+              <div class="setting-info">
+                <span class="setting-name">自动下载处理结果</span>
+                <span class="setting-desc">处理完成后自动触发浏览器下载</span>
+              </div>
+              <label class="toggle"><input type="checkbox" id="setAutoDl" /><span class="toggle-track"><span class="toggle-thumb"></span></span></label>
+            </div>
+            <div class="setting-item">
+              <div class="setting-info">
+                <span class="setting-name">保留 EXIF 元数据</span>
+                <span class="setting-desc">处理后保留原始图片的 EXIF 信息</span>
+              </div>
+              <label class="toggle"><input type="checkbox" id="setExif" checked /></label>
+            </div>
+            <div class="setting-item">
+              <div class="setting-info">
+                <span class="setting-name">最大并发处理数</span>
+                <span class="setting-desc">批量处理时的最大并发任务数</span>
+              </div>
+              <select class="setting-select" id="setConcurrency">
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="4" selected>4</option>
+                <option value="8">8</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <div class="settings-group">
+          <div class="settings-group-title">水印设置</div>
+          <div class="settings-list">
+            <div class="setting-item">
+              <div class="setting-info">
+                <span class="setting-name">默认品牌名称</span>
+                <span class="setting-desc">新建水印时的默认品牌文字</span>
+              </div>
+              <input type="text" class="form-input setting-input" id="setBrandName" placeholder="您的品牌名称" />
+            </div>
+            <div class="setting-item">
+              <div class="setting-info">
+                <span class="setting-name">水印位置</span>
+                <span class="setting-desc">品牌水印的默认对齐位置</span>
+              </div>
+              <select class="setting-select" id="setWmPosition">
+                <option value="center">居中</option>
+                <option value="bottom-right" selected>右下角</option>
+                <option value="bottom-left">左下角</option>
+                <option value="top-right">右上角</option>
+                <option value="top-left">左上角</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <div class="settings-group">
+          <div class="settings-group-title">关于</div>
+          <div class="about-card">
+            <div class="about-logo">
+              <svg width="40" height="40" viewBox="0 0 40 40" fill="none">
+                <rect x="1" y="1" width="38" height="38" rx="8" stroke="#FF6B00" stroke-width="2"/>
+                <rect x="8" y="16" width="24" height="8" rx="2.5" fill="#FF6B00" opacity="0.9"/>
+                <circle cx="13" cy="20" r="2" fill="#0D0D0D"/>
+                <circle cx="27" cy="20" r="2" fill="#0D0D0D"/>
+                <line x1="16" y1="20" x2="24" y2="20" stroke="#0D0D0D" stroke-width="1.5" stroke-linecap="round"/>
+              </svg>
+              <div>
+                <div class="about-name">ShieldPlate</div>
+                <div class="about-version">v1.0.0 · 车牌打码台</div>
+              </div>
+            </div>
+            <p class="about-desc">面向车商、内容团队、门店运营和二手车从业者的在线隐私处理平台。AI 自动识别车牌，批量打码，品牌水印，一站式完成。</p>
+            <div class="about-links">
+              <a href="#" class="about-link">使用文档</a>
+              <a href="#" class="about-link">API 接口</a>
+              <a href="#" class="about-link">联系我们</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ════════════════════════ PROGRESS TOAST ════════════════════════ -->
+  <div class="toast" id="toast" style="display:none">
+    <div class="toast-icon" id="toastIcon"></div>
+    <div class="toast-content">
+      <span class="toast-title" id="toastTitle">处理中</span>
+      <div class="toast-progress-wrap" id="toastProgressWrap">
+        <div class="toast-progress" id="toastProgress"></div>
+      </div>
+      <span class="toast-sub" id="toastSub">正在处理…</span>
+    </div>
+  </div>
+
+  <script src="src/app.js"></script>
+</body>
+</html>

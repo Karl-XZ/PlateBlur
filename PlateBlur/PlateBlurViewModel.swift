@@ -25,6 +25,7 @@ final class PlateBlurViewModel: ObservableObject {
         }
     }
     @Published var sharePayload: SharePayload?
+    @Published var historyRecords: [HistoryRecord]
     @Published var appLanguage: AppLanguage {
         didSet {
             guard oldValue != appLanguage else { return }
@@ -37,11 +38,13 @@ final class PlateBlurViewModel: ObservableObject {
     private let pipeline = PlateDetectorPipeline()
     private let renderer = PlateRedactionRenderer()
     private let exportService = ExportService()
+    private let historyStore = HistoryStore()
 
     init() {
         let language = AppText.currentLanguage
         appLanguage = language
         statusMessage = AppText.text(.importToBegin, language: language)
+        historyRecords = historyStore.load()
     }
 
     var selectedItem: BatchProcessingItem? {
@@ -71,6 +74,10 @@ final class PlateBlurViewModel: ObservableObject {
 
     var hasExportableItems: Bool {
         items.contains(where: \.isReadyForExport)
+    }
+
+    var hasHistoryRecords: Bool {
+        !historyRecords.isEmpty
     }
 
     var batchSummary: String {
@@ -280,6 +287,7 @@ final class PlateBlurViewModel: ObservableObject {
             )
             let preparedCount = sharePayload?.urls.count ?? 0
             updateItemState(selectedItem.id, state: .shared, itemStatus: localized(.sharePreparedCount, preparedCount))
+            appendHistory(for: selectedItem, phase: .shared)
             statusMessage = localized(.sharePreparedCount, preparedCount)
         } catch {
             statusMessage = localized(.sharePrepareFailed, error.localizedDescription)
@@ -303,6 +311,7 @@ final class PlateBlurViewModel: ObservableObject {
             let itemStatus = localized(.batchSharePrepared, exportableItems.count)
             for id in exportableItems.map(\.id) {
                 updateItemState(id, state: .shared, itemStatus: itemStatus)
+                appendHistory(for: currentItem(withID: id), phase: .shared)
             }
             let skippedCount = items.count - exportableItems.count
             statusMessage = skippedCount == 0
@@ -357,6 +366,8 @@ final class PlateBlurViewModel: ObservableObject {
             items[refreshedIndex].statusMessage += " \(localized(.addManualBoxIfNeeded))"
         }
 
+        appendHistory(for: items[refreshedIndex], phase: merged.isEmpty ? .failed : .detected)
+
         statusMessage = items[refreshedIndex].statusMessage
 
         if autoSaveAfterProcessing && !merged.isEmpty {
@@ -394,6 +405,7 @@ final class PlateBlurViewModel: ObservableObject {
                     uniformTypeIdentifier: exportFormat.uniformTypeIdentifier
                 )
                 updateItemState(id, state: .saved, itemStatus: localized(.savedNewCopy))
+                appendHistory(for: currentItem(withID: id), phase: .saved)
             case .overwriteOriginalWhenPossible:
                 if let assetIdentifier = item.sourceAssetIdentifier {
                     try await PhotoLibrarySaver.overwrite(
@@ -401,12 +413,14 @@ final class PlateBlurViewModel: ObservableObject {
                         imageData: imageData
                     )
                     updateItemState(id, state: .saved, itemStatus: localized(.overwriteFinished))
+                    appendHistory(for: currentItem(withID: id), phase: .saved)
                 } else {
                     try await PhotoLibrarySaver.saveNew(
                         imageData: imageData,
                         uniformTypeIdentifier: exportFormat.uniformTypeIdentifier
                     )
                     updateItemState(id, state: .saved, itemStatus: localized(.originalUnavailableSavedNew))
+                    appendHistory(for: currentItem(withID: id), phase: .saved)
                 }
             }
 
@@ -426,6 +440,10 @@ final class PlateBlurViewModel: ObservableObject {
         guard let index = items.firstIndex(where: { $0.id == id }) else { return }
         items[index].state = state
         items[index].statusMessage = itemStatus
+    }
+
+    func historyThumbnail(for record: HistoryRecord) -> UIImage? {
+        historyStore.loadThumbnail(named: record.thumbnailFileName)
     }
 
     private func refreshMessagesForLanguageChange() {
@@ -480,5 +498,98 @@ final class PlateBlurViewModel: ObservableObject {
         formatter.timeStyle = .short
         formatter.dateStyle = .none
         return formatter.string(from: .now)
+    }
+
+    private func currentItem(withID id: UUID) -> BatchProcessingItem? {
+        items.first(where: { $0.id == id })
+    }
+
+    private func appendHistory(for item: BatchProcessingItem?, phase: HistoryRecordPhase) {
+        guard let item else { return }
+
+        let recordID = UUID()
+        let thumbnailFileName = "\(recordID.uuidString).jpg"
+        let previewImage = item.redactedImage ?? item.sourceImage
+
+        do {
+            try historyStore.saveThumbnail(previewImage, named: thumbnailFileName)
+            let record = HistoryRecord(
+                id: recordID,
+                itemName: item.name,
+                timestamp: Date(),
+                phase: phase,
+                detectionCount: item.detections.count,
+                detectorName: item.primaryDetector?.rawValue,
+                thumbnailFileName: thumbnailFileName
+            )
+            historyRecords.insert(record, at: 0)
+            historyRecords = Array(historyRecords.prefix(60))
+            try historyStore.save(historyRecords)
+        } catch {
+            // Ignore history persistence errors so the main workflow stays responsive.
+        }
+    }
+}
+
+private struct HistoryStore {
+    private let fileManager = FileManager.default
+
+    private var baseDirectory: URL {
+        let base = fileManager.urls(for: .applicationSupportDirectory, in: .userDomainMask).first
+            ?? URL(fileURLWithPath: NSTemporaryDirectory())
+        return base.appendingPathComponent("PlateBlurHistory", isDirectory: true)
+    }
+
+    private var thumbnailsDirectory: URL {
+        baseDirectory.appendingPathComponent("thumbnails", isDirectory: true)
+    }
+
+    private var recordsURL: URL {
+        baseDirectory.appendingPathComponent("history.json")
+    }
+
+    func load() -> [HistoryRecord] {
+        prepareDirectories()
+        guard let data = try? Data(contentsOf: recordsURL),
+              let records = try? JSONDecoder().decode([HistoryRecord].self, from: data) else {
+            return []
+        }
+        return records.sorted { $0.timestamp > $1.timestamp }
+    }
+
+    func save(_ records: [HistoryRecord]) throws {
+        prepareDirectories()
+        let trimmed = Array(records.prefix(60))
+        let data = try JSONEncoder().encode(trimmed)
+        try data.write(to: recordsURL, options: .atomic)
+        pruneUnusedThumbnails(keeping: Set(trimmed.map(\.thumbnailFileName)))
+    }
+
+    func saveThumbnail(_ image: UIImage, named fileName: String) throws {
+        prepareDirectories()
+        let targetSize = CGSize(width: 320, height: 200)
+        let thumbnail = try image.resized(to: targetSize)
+        guard let data = thumbnail.jpegData(compressionQuality: 0.78) else {
+            throw ImagePreparationError.invalidImageData
+        }
+        try data.write(to: thumbnailsDirectory.appendingPathComponent(fileName), options: .atomic)
+    }
+
+    func loadThumbnail(named fileName: String) -> UIImage? {
+        UIImage(contentsOfFile: thumbnailsDirectory.appendingPathComponent(fileName).path)
+    }
+
+    private func prepareDirectories() {
+        try? fileManager.createDirectory(at: thumbnailsDirectory, withIntermediateDirectories: true)
+    }
+
+    private func pruneUnusedThumbnails(keeping activeFiles: Set<String>) {
+        guard let contents = try? fileManager.contentsOfDirectory(at: thumbnailsDirectory, includingPropertiesForKeys: nil) else {
+            return
+        }
+
+        for url in contents where !activeFiles.contains(url.lastPathComponent) {
+            try? fileManager.removeItem(at: url)
+        }
     }
 }

@@ -18,10 +18,10 @@
 		B1000000000000000017 /* EditorCanvasView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1000000000000000016 /* EditorCanvasView.swift */; };
 		B1000000000000000019 /* PhotoLibrarySaver.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1000000000000000018 /* PhotoLibrarySaver.swift */; };
 		B1000000000000000021 /* UIImage+Helpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1000000000000000020 /* UIImage+Helpers.swift */; };
-			B1000000000000000023 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B1000000000000000022 /* Assets.xcassets */; };
-			B1000000000000000025 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B1000000000000000024 /* Preview Assets.xcassets */; };
-			B1000000000000000061 /* PlateBatchModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1000000000000000060 /* PlateBatchModels.swift */; };
-			B1000000000000000063 /* TextPlateDetector.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1000000000000000062 /* TextPlateDetector.swift */; };
+		B1000000000000000023 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B1000000000000000022 /* Assets.xcassets */; };
+		B1000000000000000025 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B1000000000000000024 /* Preview Assets.xcassets */; };
+		B1000000000000000061 /* PlateBatchModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1000000000000000060 /* PlateBatchModels.swift */; };
+		B1000000000000000063 /* TextPlateDetector.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1000000000000000062 /* TextPlateDetector.swift */; };
 		B1000000000000000065 /* ExportService.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1000000000000000064 /* ExportService.swift */; };
 		B1000000000000000067 /* MediaBridgeViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1000000000000000066 /* MediaBridgeViews.swift */; };
 		B1000000000000000069 /* LicensePlateDetector.mlmodelc in Resources */ = {isa = PBXBuildFile; fileRef = B1000000000000000068 /* LicensePlateDetector.mlmodelc */; };
@@ -46,8 +46,8 @@
 		B1000000000000000022 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		B1000000000000000024 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		B1000000000000000026 /* PlateBlur.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PlateBlur.app; sourceTree = BUILT_PRODUCTS_DIR; };
-			B1000000000000000060 /* PlateBatchModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlateBatchModels.swift; sourceTree = "<group>"; };
-			B1000000000000000062 /* TextPlateDetector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextPlateDetector.swift; sourceTree = "<group>"; };
+		B1000000000000000060 /* PlateBatchModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlateBatchModels.swift; sourceTree = "<group>"; };
+		B1000000000000000062 /* TextPlateDetector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextPlateDetector.swift; sourceTree = "<group>"; };
 		B1000000000000000064 /* ExportService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExportService.swift; sourceTree = "<group>"; };
 		B1000000000000000066 /* MediaBridgeViews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MediaBridgeViews.swift; sourceTree = "<group>"; };
 		B1000000000000000068 /* LicensePlateDetector.mlmodelc */ = {isa = PBXFileReference; lastKnownFileType = folder; path = LicensePlateDetector.mlmodelc; sourceTree = "<group>"; };
@@ -91,17 +91,17 @@
 				B1000000000000000062 /* TextPlateDetector.swift */,
 				B1000000000000000012 /* RectangleCandidateDetector.swift */,
 				B1000000000000000014 /* PlateRedactionRenderer.swift */,
-					B1000000000000000064 /* ExportService.swift */,
-					B1000000000000000016 /* EditorCanvasView.swift */,
-					B1000000000000000066 /* MediaBridgeViews.swift */,
-					B1000000000000000018 /* PhotoLibrarySaver.swift */,
-					B1000000000000000020 /* UIImage+Helpers.swift */,
-					B1000000000000000068 /* LicensePlateDetector.mlmodelc */,
-					B1000000000000000076 /* LicensePlateDetectorSwiss.mlmodelc */,
-					B1000000000000000074 /* SamplePhotos */,
-					B1000000000000000022 /* Assets.xcassets */,
-					B1000000000000000031 /* Preview Content */,
-				);
+				B1000000000000000064 /* ExportService.swift */,
+				B1000000000000000016 /* EditorCanvasView.swift */,
+				B1000000000000000066 /* MediaBridgeViews.swift */,
+				B1000000000000000018 /* PhotoLibrarySaver.swift */,
+				B1000000000000000020 /* UIImage+Helpers.swift */,
+				B1000000000000000068 /* LicensePlateDetector.mlmodelc */,
+				B1000000000000000076 /* LicensePlateDetectorSwiss.mlmodelc */,
+				B1000000000000000074 /* SamplePhotos */,
+				B1000000000000000022 /* Assets.xcassets */,
+				B1000000000000000031 /* Preview Content */,
+			);
 			path = PlateBlur;
 			sourceTree = "<group>";
 		};
@@ -178,13 +178,13 @@
 		B1000000000000000035 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
-				files = (
-					B1000000000000000023 /* Assets.xcassets in Resources */,
-					B1000000000000000025 /* Preview Assets.xcassets in Resources */,
-					B1000000000000000069 /* LicensePlateDetector.mlmodelc in Resources */,
-					B1000000000000000077 /* LicensePlateDetectorSwiss.mlmodelc in Resources */,
-					B1000000000000000075 /* SamplePhotos in Resources */,
-				);
+			files = (
+				B1000000000000000023 /* Assets.xcassets in Resources */,
+				B1000000000000000025 /* Preview Assets.xcassets in Resources */,
+				B1000000000000000069 /* LicensePlateDetector.mlmodelc in Resources */,
+				B1000000000000000077 /* LicensePlateDetectorSwiss.mlmodelc in Resources */,
+				B1000000000000000075 /* SamplePhotos in Resources */,
+			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
@@ -343,15 +343,16 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = "";
-				ENABLE_PREVIEWS = YES;
-				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_KEY_CFBundleDisplayName = PlateBlur;
-				INFOPLIST_KEY_NSCameraUsageDescription = "需要使用相机来拍摄车辆照片，并立即完成车牌打码。";
-				INFOPLIST_KEY_NSPhotoLibraryAddUsageDescription = "需要保存打码后的车辆照片回到相册。";
-				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "需要读取相册中的车辆照片来检测并打码车牌。";
-				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				DEVELOPMENT_TEAM = 887TZ78HJ5;
+					ENABLE_PREVIEWS = YES;
+					GENERATE_INFOPLIST_FILE = YES;
+					INFOPLIST_KEY_CFBundleDisplayName = PlateBlur;
+					INFOPLIST_KEY_NSCameraUsageDescription = "需要使用相机来拍摄车辆照片，并立即完成车牌打码。";
+					INFOPLIST_KEY_NSPhotoLibraryAddUsageDescription = "需要保存打码后的车辆照片回到相册。";
+					INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "需要读取相册中的车辆照片来检测并打码车牌。";
+					INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+					INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+					IPHONEOS_DEPLOYMENT_TARGET = 17.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -373,15 +374,16 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = "";
-				ENABLE_PREVIEWS = YES;
-				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_KEY_CFBundleDisplayName = PlateBlur;
-				INFOPLIST_KEY_NSCameraUsageDescription = "需要使用相机来拍摄车辆照片，并立即完成车牌打码。";
-				INFOPLIST_KEY_NSPhotoLibraryAddUsageDescription = "需要保存打码后的车辆照片回到相册。";
-				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "需要读取相册中的车辆照片来检测并打码车牌。";
-				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				DEVELOPMENT_TEAM = 887TZ78HJ5;
+					ENABLE_PREVIEWS = YES;
+					GENERATE_INFOPLIST_FILE = YES;
+					INFOPLIST_KEY_CFBundleDisplayName = PlateBlur;
+					INFOPLIST_KEY_NSCameraUsageDescription = "需要使用相机来拍摄车辆照片，并立即完成车牌打码。";
+					INFOPLIST_KEY_NSPhotoLibraryAddUsageDescription = "需要保存打码后的车辆照片回到相册。";
+					INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "需要读取相册中的车辆照片来检测并打码车牌。";
+					INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+					INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+					IPHONEOS_DEPLOYMENT_TARGET = 17.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",

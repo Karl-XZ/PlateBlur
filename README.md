@@ -1,6 +1,6 @@
 # PlateBlur
 
-PlateBlur is an iPhone-first SwiftUI app for vehicle-photo license plate redaction.
+PlateBlur is a combined iPhone + Web project for vehicle-photo and vehicle-video license plate redaction.
 
 Current app features:
 
@@ -18,11 +18,35 @@ Current app features:
 - Share one or many processed results to chat apps, mail, or Files
 - Block save/share when a photo has no active redaction box, so unredacted originals are not exported by mistake
 
+Current web features:
+
+- Upload one or many images in the browser and auto-generate editable plate candidate boxes
+- Apply blur, mosaic, solid block, or brand watermark styles directly on canvas
+- Batch process images and download the current image or the whole batch
+- Upload videos, detect the current frame, add manual track points, and interpolate a time-based track
+- Process videos frame by frame in-browser with a visible progress bar and export a WebM result
+- Persist settings and processing history locally in the browser with download/delete actions
+
 ## Open In Xcode
 
 Open:
 
 - `PlateBlur/PlateBlur.xcodeproj`
+- `PlateBlur/web/index.html` for the browser workstation
+
+## Open The Web Workstation
+
+The web version lives in:
+
+- `PlateBlur/web`
+
+Because it is a static browser app, open it with a local HTTP server instead of double-clicking the HTML file.
+
+Example:
+
+1. `cd /Users/applemima111/Desktop/car/PlateBlur/web`
+2. `python3 -m http.server 4174`
+3. Open `http://127.0.0.1:4174`
 
 ## Model Integration
 
@@ -58,6 +82,7 @@ The runtime lookup and detector orchestration live in:
 - Requirement coverage is tracked in `/Users/applemima111/Desktop/car/PlateBlur/REQUIREMENTS_AUDIT.md`.
 - Measured accuracy is tracked in `/Users/applemima111/Desktop/car/PlateBlur/EVALUATION_REPORT.md`.
 - Switzerland upgrade comparisons are tracked in `/Users/applemima111/Desktop/car/PlateBlur/SWISS_UPGRADE_REPORT.md`.
+- The current algorithm walkthrough is tracked in `/Users/applemima111/Desktop/car/PlateBlur/CURRENT_PLATE_ALGORITHM.md`.
 
 ## Evaluation Scripts
 

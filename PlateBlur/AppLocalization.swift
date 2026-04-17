@@ -59,6 +59,8 @@ enum AppCopy {
     case shareMenu
     case stylesTitle
     case statusTitle
+    case historyTitle
+    case historyEmpty
     case testLibraryTitle
     case testLibrarySubtitle
     case importSample
@@ -151,18 +153,18 @@ enum AppCopy {
         case .simplifiedChinese:
             switch self {
             case .appTitle: return "车牌打码"
-            case .appSubtitle: return "拍照、检测、打码，一屏完成。"
+            case .appSubtitle: return "打码，\n一键完成"
             case .settings: return "设置"
             case .statusIdle: return "导入车辆照片后就可以开始。"
             case .queueTitle: return "当前队列"
             case .queueEmpty: return "还没有图片。可以从相册导入、直接拍照，或先看内置测试图。"
             case .queueSummary: return "%d / %d 张已可导出"
-            case .emptyHeroTitle: return "先挑一张车图，我们马上开始。"
+            case .emptyHeroTitle: return "先挑一张车图"
             case .emptyHeroBody: return "这版已经内置 Core ML 车牌检测，也保留 OCR 和矩形兜底。适合手机现场拍照后直接完成打码。"
             case .emptyHeroHint: return "推荐先点“测试图片”，快速看效果。"
             case .currentItem: return "当前图片"
-            case .previewOriginal: return "原图与框"
-            case .previewRedacted: return "打码结果"
+            case .previewOriginal: return "原图\n与框"
+            case .previewRedacted: return "打码\n结果"
             case .editHint: return "拖动或缩放框，直接修正识别结果。"
             case .resultHint: return "这是当前打码预览，保存与分享都会导出这一版。"
             case .detectionCount: return "%d 个框"
@@ -184,6 +186,8 @@ enum AppCopy {
             case .shareMenu: return "分享"
             case .stylesTitle: return "打码样式"
             case .statusTitle: return "状态"
+            case .historyTitle: return "历史记录"
+            case .historyEmpty: return "处理完成后的图片会显示在这里，方便回看最近的识别与打码结果。"
             case .testLibraryTitle: return "测试图片"
             case .testLibrarySubtitle: return "这里打包了当前评测时用到的公开样张，包括几张瑞士道路场景难图，直接选一张导入看看。"
             case .importSample: return "导入这张测试图"
@@ -274,18 +278,18 @@ enum AppCopy {
         case .english:
             switch self {
             case .appTitle: return "PlateBlur"
-            case .appSubtitle: return "Capture, detect, and redact in one screen."
+            case .appSubtitle: return "Redact,\nin one tap"
             case .settings: return "Settings"
             case .statusIdle: return "Import a vehicle photo to begin."
             case .queueTitle: return "Queue"
             case .queueEmpty: return "No images yet. Import from the library, capture one now, or open the built-in samples first."
             case .queueSummary: return "%d / %d ready to export"
-            case .emptyHeroTitle: return "Pick a car photo and we can start right away."
+            case .emptyHeroTitle: return "Pick a car photo"
             case .emptyHeroBody: return "This build ships with a bundled Core ML plate detector plus OCR and rectangle fallback recovery. It is tuned for fast iPhone photo redaction."
             case .emptyHeroHint: return "Start with Test Samples if you want to inspect the current benchmark images."
             case .currentItem: return "Current Image"
-            case .previewOriginal: return "Original + Boxes"
-            case .previewRedacted: return "Redacted Result"
+            case .previewOriginal: return "Original\n+ Boxes"
+            case .previewRedacted: return "Redacted\nResult"
             case .editHint: return "Drag or resize the boxes to correct the detection result."
             case .resultHint: return "This is the current redaction preview. Save and share will export this version."
             case .detectionCount: return "%d boxes"
@@ -307,6 +311,8 @@ enum AppCopy {
             case .shareMenu: return "Share"
             case .stylesTitle: return "Redaction Style"
             case .statusTitle: return "Status"
+            case .historyTitle: return "History"
+            case .historyEmpty: return "Finished results will show up here so you can quickly revisit recent detections and exports."
             case .testLibraryTitle: return "Test Samples"
             case .testLibrarySubtitle: return "These bundled public benchmark images now include several difficult Switzerland road-scene samples for quick inspection."
             case .importSample: return "Import This Sample"

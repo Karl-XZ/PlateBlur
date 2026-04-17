@@ -1,0 +1,117 @@
+/* ═══════════════════════════════════════════
+   ShieldPlate · Sidebar
+   ═══════════════════════════════════════════ */
+
+.sidebar {
+  width: 220px;
+  flex-shrink: 0;
+  background: var(--surface);
+  border-right: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  padding: 20px 12px;
+  overflow-y: auto;
+}
+
+/* ── Logo ── */
+.sidebar-logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 4px 8px 20px;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 16px;
+}
+.sidebar-logo svg { flex-shrink: 0; }
+.sidebar-logo-text {
+  font-family: var(--font-display);
+  font-size: 17px;
+  font-weight: 400;
+  color: var(--text);
+  letter-spacing: -0.01em;
+}
+.sidebar-logo-text strong {
+  font-weight: 800;
+  color: var(--accent);
+}
+
+/* ── Nav ── */
+.sidebar-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  flex: 1;
+}
+
+.nav-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 9px 10px;
+  border-radius: var(--radius-sm);
+  border: none;
+  background: transparent;
+  color: var(--text2);
+  font-family: var(--font-body);
+  font-size: 13px;
+  cursor: pointer;
+  transition: all var(--dur) var(--ease);
+  width: 100%;
+  text-align: left;
+  position: relative;
+}
+.nav-item:hover {
+  background: var(--surface2);
+  color: var(--text);
+}
+.nav-item.active {
+  background: var(--accent-dim);
+  color: var(--accent);
+  font-weight: 500;
+}
+.nav-item.active::before {
+  content: '';
+  position: absolute;
+  left: 0; top: 6px; bottom: 6px;
+  width: 3px;
+  background: var(--accent);
+  border-radius: 0 3px 3px 0;
+  box-shadow: 0 0 8px var(--accent-glow);
+}
+
+.nav-icon {
+  width: 18px; height: 18px;
+  flex-shrink: 0;
+  opacity: 0.7;
+  transition: opacity var(--dur) var(--ease);
+}
+.nav-item:hover .nav-icon,
+.nav-item.active .nav-icon { opacity: 1; }
+
+/* ── Footer ── */
+.sidebar-footer {
+  padding-top: 16px;
+  border-top: 1px solid var(--border);
+  margin-top: auto;
+}
+
+.storage-bar { display: flex; flex-direction: column; gap: 6px; }
+.storage-label {
+  display: flex;
+  justify-content: space-between;
+  font-size: 11px;
+  color: var(--text3);
+}
+.storage-pct { color: var(--text2); font-family: var(--font-mono); }
+.storage-track {
+  height: 4px;
+  background: var(--surface3);
+  border-radius: 99px;
+  overflow: hidden;
+}
+.storage-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--accent), var(--accent2));
+  border-radius: 99px;
+  transition: width 1s var(--ease);
+}

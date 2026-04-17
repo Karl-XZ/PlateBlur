@@ -33,20 +33,28 @@ struct ContentView: View {
                     .ignoresSafeArea()
 
                 ScrollView(showsIndicators: false) {
-                    VStack(spacing: 14) {
-                        heroHeader(topInset: geometry.safeAreaInsets.top)
-                        imageStageSection(height: min(max(geometry.size.height * 0.34, 270), 360))
-                        commandSection
-                        queueSection
+                    VStack(spacing: 0) {
+                        heroSection(geometry: geometry)
+
+                        VStack(spacing: 16) {
+                            commandSection
+                            queueSection
+                            historySection
+                        }
+                        .padding(.horizontal, 16)
+                        .padding(.top, 16)
+                        .padding(.bottom, 112)
                     }
-                    .padding(.horizontal, 20)
-                    .padding(.bottom, 96)
+                    .frame(maxWidth: .infinity, minHeight: geometry.size.height, alignment: .top)
                 }
+                .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
                 .scrollBounceBehavior(.basedOnSize)
 
                 bottomToolbar(bottomInset: geometry.safeAreaInsets.bottom)
             }
+            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
         }
+        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
         .preferredColorScheme(.light)
         .environment(\.locale, viewModel.appLanguage.locale)
         .sheet(isPresented: $isCameraPresented) {
@@ -101,91 +109,130 @@ struct ContentView: View {
         }
     }
 
-    private func heroHeader(topInset: CGFloat) -> some View {
-        VStack(alignment: .leading, spacing: 14) {
-            HStack(alignment: .top, spacing: 12) {
-                VStack(alignment: .leading, spacing: 8) {
-                    Text(t(.appTitle))
-                        .font(.system(size: 32, weight: .bold))
-                        .foregroundStyle(textPrimary)
+    private func headerSection(topInset: CGFloat) -> some View {
+        HStack(alignment: .top, spacing: 12) {
+            VStack(alignment: .leading, spacing: 8) {
+                Text(t(.appTitle))
+                    .font(.system(size: 32, weight: .bold))
+                    .foregroundStyle(textPrimary)
 
-                    Text(t(.appSubtitle))
-                        .font(.system(size: 17, weight: .medium))
-                        .foregroundStyle(textSecondary)
-                }
-
-                Spacer(minLength: 0)
-
-                toolbarIconButton(systemImage: "globe") {
-                    isSettingsPresented = true
-                }
+                Text(t(.appSubtitle))
+                    .font(.system(size: 18, weight: .semibold))
+                    .foregroundStyle(textSecondary)
+                    .lineSpacing(2)
+                    .fixedSize(horizontal: false, vertical: true)
             }
 
-            AppleGlassCard(cornerRadius: 24, padding: 14) {
-                HStack(alignment: .center, spacing: 12) {
-                    VStack(alignment: .leading, spacing: 4) {
-                        Text(viewModel.statusMessage)
-                            .font(.system(size: 15, weight: .semibold))
-                            .foregroundStyle(textPrimary)
-                            .frame(maxWidth: .infinity, alignment: .leading)
-                            .lineLimit(2)
+            Spacer(minLength: 0)
 
-                        if let item = viewModel.selectedItem {
-                            Text(item.statusMessage)
-                                .font(.system(size: 13, weight: .medium))
-                                .foregroundStyle(textSecondary)
-                                .lineLimit(1)
-                        }
-                    }
-
-                    Spacer(minLength: 0)
-
-                    Image(systemName: "waveform.and.magnifyingglass")
-                        .font(.system(size: 17, weight: .semibold))
-                        .foregroundStyle(accentBlue)
-                        .frame(width: 36, height: 36)
-                        .background(
-                            Circle()
-                                .fill(accentBlue.opacity(0.10))
-                        )
-                }
+            toolbarIconButton(systemImage: "globe") {
+                isSettingsPresented = true
             }
         }
         .padding(.top, topInset + 10)
     }
 
+    private func heroSection(geometry: GeometryProxy) -> some View {
+        VStack(spacing: 16) {
+            headerSection(topInset: geometry.safeAreaInsets.top)
+            statusStrip
+            imageStageSection(height: min(max(geometry.size.height * 0.42, 320), 480))
+        }
+        .padding(.horizontal, 16)
+        .padding(.bottom, 22)
+        .frame(maxWidth: .infinity, alignment: .top)
+        .background(
+            LinearGradient(
+                colors: [
+                    Color.white,
+                    Color(red: 0.94, green: 0.96, blue: 1.0),
+                    backgroundGray
+                ],
+                startPoint: .top,
+                endPoint: .bottom
+            )
+        )
+        .overlay(alignment: .topTrailing) {
+            Circle()
+                .fill(accentBlue.opacity(0.08))
+                .frame(width: 220, height: 220)
+                .blur(radius: 10)
+                .offset(x: 70, y: -30)
+        }
+    }
+
+    private var statusStrip: some View {
+        HStack(alignment: .center, spacing: 12) {
+            VStack(alignment: .leading, spacing: 4) {
+                Text(viewModel.statusMessage)
+                    .font(.system(size: 15, weight: .semibold))
+                    .foregroundStyle(textPrimary)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .fixedSize(horizontal: false, vertical: true)
+
+                if let item = viewModel.selectedItem {
+                    Text(item.statusMessage)
+                        .font(.system(size: 13, weight: .medium))
+                        .foregroundStyle(textSecondary)
+                        .fixedSize(horizontal: false, vertical: true)
+                }
+            }
+
+            Spacer(minLength: 0)
+
+            Image(systemName: "waveform.and.magnifyingglass")
+                .font(.system(size: 17, weight: .semibold))
+                .foregroundStyle(accentBlue)
+                .frame(width: 42, height: 42)
+                .background(
+                    Circle()
+                        .fill(accentBlue.opacity(0.10))
+                )
+        }
+        .padding(.horizontal, 16)
+        .padding(.vertical, 14)
+        .background(
+            Capsule(style: .continuous)
+                .fill(Color.white.opacity(0.74))
+                .background(.ultraThinMaterial, in: Capsule(style: .continuous))
+        )
+        .overlay(
+            Capsule(style: .continuous)
+                .stroke(Color.white.opacity(0.96), lineWidth: 1)
+        )
+        .shadow(color: Color.black.opacity(0.06), radius: 18, y: 8)
+    }
+
     private func imageStageSection(height: CGFloat) -> some View {
-        AppleGlassCard(cornerRadius: 32, padding: 18) {
-            VStack(alignment: .leading, spacing: 14) {
-                HStack(alignment: .center, spacing: 12) {
-                    VStack(alignment: .leading, spacing: 6) {
-                        Text(viewModel.selectedItem?.name ?? t(.emptyHeroTitle))
-                            .font(.system(size: 20, weight: .semibold))
-                            .foregroundStyle(textPrimary)
-                            .lineLimit(2)
+        VStack(alignment: .leading, spacing: 14) {
+            VStack(alignment: .leading, spacing: 6) {
+                Text(viewModel.selectedItem?.name ?? t(.emptyHeroTitle))
+                    .font(.system(size: 24, weight: .bold))
+                    .foregroundStyle(textPrimary)
+                    .fixedSize(horizontal: false, vertical: true)
 
-                        Text(stageSubtitle)
-                            .font(.system(size: 14, weight: .medium))
-                            .foregroundStyle(textSecondary)
-                            .lineLimit(2)
-                    }
+                Text(stageSubtitle)
+                    .font(.system(size: 15, weight: .medium))
+                    .foregroundStyle(textSecondary)
+                    .fixedSize(horizontal: false, vertical: true)
+            }
 
-                    Spacer(minLength: 0)
+            if viewModel.selectedItem != nil {
+                previewModePicker
+            }
 
-                    previewModePicker
+            Group {
+                if let item = viewModel.selectedItem {
+                    stagePreview(for: item, height: height)
+                } else {
+                    emptyStage(height: height)
                 }
+            }
 
-                Group {
-                    if let item = viewModel.selectedItem {
-                        stagePreview(for: item, height: height)
-                    } else {
-                        emptyStage(height: height)
-                    }
-                }
-
-                HStack(spacing: 10) {
+            HStack(spacing: 10) {
+                if let item = viewModel.selectedItem {
                     infoChip(
-                        title: t(.detectionCount, viewModel.selectedItem?.detections.count ?? 0),
+                        title: t(.detectionCount, item.detections.count),
                         tint: accentBlue.opacity(0.12),
                         foreground: accentBlue
                     )
@@ -193,36 +240,52 @@ struct ContentView: View {
                     infoChip(
                         title: t(
                             .detectorLabel,
-                            viewModel.selectedItem?.primaryDetector?.title(in: viewModel.appLanguage) ?? t(.noDetector)
+                            item.primaryDetector?.title(in: viewModel.appLanguage) ?? t(.noDetector)
                         ),
                         tint: Color.white.opacity(0.72),
                         foreground: textPrimary
                     )
+                } else {
+                    Text(t(.emptyHeroHint))
+                        .font(.system(size: 14, weight: .medium))
+                        .foregroundStyle(textSecondary)
+                        .fixedSize(horizontal: false, vertical: true)
                 }
+            }
 
-                if viewModel.selectedItem != nil {
-                    HStack(spacing: 12) {
-                        inlineActionButton(
-                            title: t(.addBox),
-                            systemImage: "plus.viewfinder",
-                            emphasized: true,
-                            isDisabled: viewModel.selectedItem == nil
-                        ) {
-                            viewModel.addManualDetection()
-                        }
+            if viewModel.selectedItem != nil {
+                HStack(spacing: 12) {
+                    inlineActionButton(
+                        title: t(.addBox),
+                        systemImage: "plus.viewfinder",
+                        emphasized: true,
+                        isDisabled: viewModel.selectedItem == nil
+                    ) {
+                        viewModel.addManualDetection()
+                    }
 
-                        inlineActionButton(
-                            title: t(.deleteBox),
-                            systemImage: "trash",
-                            emphasized: false,
-                            isDisabled: viewModel.selectedDetectionID == nil
-                        ) {
-                            viewModel.removeSelectedDetection()
-                        }
+                    inlineActionButton(
+                        title: t(.deleteBox),
+                        systemImage: "trash",
+                        emphasized: false,
+                        isDisabled: viewModel.selectedDetectionID == nil
+                    ) {
+                        viewModel.removeSelectedDetection()
                     }
                 }
             }
         }
+        .padding(18)
+        .background(
+            RoundedRectangle(cornerRadius: 32, style: .continuous)
+                .fill(Color.white.opacity(0.76))
+                .background(.ultraThinMaterial, in: RoundedRectangle(cornerRadius: 32, style: .continuous))
+        )
+        .overlay(
+            RoundedRectangle(cornerRadius: 32, style: .continuous)
+                .stroke(Color.white.opacity(0.96), lineWidth: 1)
+        )
+        .shadow(color: Color.black.opacity(0.08), radius: 24, y: 10)
     }
 
     private func stagePreview(for item: BatchProcessingItem, height: CGFloat) -> some View {
@@ -272,11 +335,13 @@ struct ContentView: View {
                         .font(.system(size: 17, weight: .medium))
                         .foregroundStyle(textPrimary)
                         .multilineTextAlignment(.center)
+                        .fixedSize(horizontal: false, vertical: true)
 
                     Text(t(.emptyHeroHint))
                         .font(.system(size: 14, weight: .medium))
                         .foregroundStyle(textSecondary)
                         .multilineTextAlignment(.center)
+                        .fixedSize(horizontal: false, vertical: true)
                 }
                 .frame(maxWidth: 280)
             }
@@ -429,6 +494,45 @@ struct ContentView: View {
         }
     }
 
+    private var historySection: some View {
+        AppleGlassCard(cornerRadius: 30, padding: 18) {
+            VStack(alignment: .leading, spacing: 14) {
+                HStack {
+                    Text(t(.historyTitle))
+                        .font(.system(size: 20, weight: .semibold))
+                        .foregroundStyle(textPrimary)
+
+                    Spacer(minLength: 0)
+
+                    if viewModel.hasHistoryRecords {
+                        Text("\(viewModel.historyRecords.count)")
+                            .font(.system(size: 13, weight: .semibold))
+                            .foregroundStyle(textSecondary)
+                    }
+                }
+
+                if viewModel.historyRecords.isEmpty {
+                    Text(t(.historyEmpty))
+                        .font(.system(size: 15, weight: .medium))
+                        .foregroundStyle(textSecondary)
+                        .fixedSize(horizontal: false, vertical: true)
+                        .padding(16)
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .background(
+                            RoundedRectangle(cornerRadius: 22, style: .continuous)
+                                .fill(Color.white.opacity(0.62))
+                        )
+                } else {
+                    LazyVStack(spacing: 12) {
+                        ForEach(viewModel.historyRecords.prefix(12)) { record in
+                            historyRow(for: record)
+                        }
+                    }
+                }
+            }
+        }
+    }
+
     private func bottomToolbar(bottomInset: CGFloat) -> some View {
         HStack(spacing: 12) {
             toolbarMenu(
@@ -484,35 +588,17 @@ struct ContentView: View {
     private var previewModePicker: some View {
         HStack(spacing: 6) {
             ForEach(PreviewMode.allCases) { mode in
-                Button {
-                    withAnimation(.easeInOut(duration: 0.2)) {
-                        previewMode = mode
-                    }
-                } label: {
-                    Text(mode.title(in: viewModel.appLanguage))
-                        .font(.system(size: 14, weight: .semibold))
-                        .foregroundStyle(previewMode == mode ? .white : textPrimary)
-                        .padding(.horizontal, 14)
-                        .padding(.vertical, 9)
-                        .background(
-                            Capsule(style: .continuous)
-                                .fill(previewMode == mode ? accentBlue : Color.white.opacity(0.76))
-                        )
-                        .overlay(
-                            Capsule(style: .continuous)
-                                .stroke(borderColor, lineWidth: previewMode == mode ? 0 : 1)
-                        )
-                }
-                .buttonStyle(.plain)
+                previewModeButton(for: mode)
             }
         }
+        .frame(maxWidth: .infinity, alignment: .leading)
     }
 
     private var stageSubtitle: String {
         if let item = viewModel.selectedItem {
             return item.state.title(in: viewModel.appLanguage)
         }
-        return t(.emptyHeroHint)
+        return t(.appSubtitle)
     }
 
     private func toolbarIconButton(systemImage: String, action: @escaping () -> Void) -> some View {
@@ -529,6 +615,33 @@ struct ContentView: View {
                 .overlay(
                     Circle()
                         .stroke(Color.white.opacity(0.92), lineWidth: 1)
+                )
+        }
+        .buttonStyle(.plain)
+    }
+
+    private func previewModeButton(for mode: PreviewMode) -> some View {
+        let isSelected = previewMode == mode
+
+        return Button {
+            withAnimation(.easeInOut(duration: 0.2)) {
+                previewMode = mode
+            }
+        } label: {
+            Text(mode.title(in: viewModel.appLanguage))
+                .font(.system(size: 14, weight: .semibold))
+                .foregroundStyle(isSelected ? Color.white : textPrimary)
+                .multilineTextAlignment(.center)
+                .lineLimit(2)
+                .frame(width: 94)
+                .frame(minHeight: 56)
+                .background(
+                    RoundedRectangle(cornerRadius: 22, style: .continuous)
+                        .fill(isSelected ? accentBlue : Color.white.opacity(0.76))
+                )
+                .overlay(
+                    RoundedRectangle(cornerRadius: 22, style: .continuous)
+                        .stroke(borderColor, lineWidth: isSelected ? 0 : 1)
                 )
         }
         .buttonStyle(.plain)
@@ -719,6 +832,68 @@ struct ContentView: View {
         .opacity(isDisabled ? 0.5 : 1)
     }
 
+    private func historyRow(for record: HistoryRecord) -> some View {
+        HStack(spacing: 12) {
+            Group {
+                if let thumbnail = viewModel.historyThumbnail(for: record) {
+                    Image(uiImage: thumbnail)
+                        .resizable()
+                        .scaledToFill()
+                } else {
+                    RoundedRectangle(cornerRadius: 16, style: .continuous)
+                        .fill(accentBlue.opacity(0.12))
+                        .overlay {
+                            Image(systemName: "photo")
+                                .font(.system(size: 18, weight: .semibold))
+                                .foregroundStyle(accentBlue)
+                        }
+                }
+            }
+            .frame(width: 84, height: 62)
+            .clipShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
+
+            VStack(alignment: .leading, spacing: 6) {
+                HStack(spacing: 8) {
+                    Text(record.itemName)
+                        .font(.system(size: 15, weight: .semibold))
+                        .foregroundStyle(textPrimary)
+                        .lineLimit(1)
+
+                    Spacer(minLength: 0)
+
+                    Text(record.phase.title(in: viewModel.appLanguage))
+                        .font(.system(size: 12, weight: .semibold))
+                        .foregroundStyle(accentBlue)
+                        .padding(.horizontal, 10)
+                        .padding(.vertical, 6)
+                        .background(
+                            Capsule(style: .continuous)
+                                .fill(accentBlue.opacity(0.10))
+                        )
+                }
+
+                Text(historyMetaText(for: record))
+                    .font(.system(size: 13, weight: .medium))
+                    .foregroundStyle(textSecondary)
+                    .fixedSize(horizontal: false, vertical: true)
+
+                Text(relativeDateString(for: record.timestamp))
+                    .font(.system(size: 12, weight: .medium))
+                    .foregroundStyle(textSecondary.opacity(0.9))
+            }
+        }
+        .padding(12)
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .background(
+            RoundedRectangle(cornerRadius: 22, style: .continuous)
+                .fill(Color.white.opacity(0.72))
+        )
+        .overlay(
+            RoundedRectangle(cornerRadius: 22, style: .continuous)
+                .stroke(borderColor, lineWidth: 1)
+        )
+    }
+
     private func loadSelections(_ items: [PhotosPickerItem]) async {
         guard !items.isEmpty else { return }
 
@@ -764,6 +939,18 @@ struct ContentView: View {
 
     private func t(_ key: AppCopy, _ arguments: CVarArg...) -> String {
         AppText.text(key, language: viewModel.appLanguage, arguments: arguments)
+    }
+
+    private func historyMetaText(for record: HistoryRecord) -> String {
+        let detector = record.detectorName ?? t(.noDetector)
+        return "\(t(.detectionCount, record.detectionCount)) · \(detector)"
+    }
+
+    private func relativeDateString(for date: Date) -> String {
+        let formatter = RelativeDateTimeFormatter()
+        formatter.locale = viewModel.appLanguage.locale
+        formatter.unitsStyle = .full
+        return formatter.localizedString(for: date, relativeTo: Date())
     }
 }
 
