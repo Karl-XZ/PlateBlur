@@ -237,6 +237,13 @@
 }
 .toggle-row:hover { color: var(--text); }
 
+.toggle-hint {
+  font-size: 11px;
+  color: var(--text3);
+  line-height: 1.5;
+  margin: -4px 0 2px;
+}
+
 /* ── Action Row ── */
 .action-row {
   display: flex;
@@ -321,6 +328,10 @@
   object-fit: contain;
   background: #000;
   display: none;
+}
+
+.video-view-toolbar {
+  z-index: 5;
 }
 
 .video-empty {
@@ -678,6 +689,10 @@
 .action-row-grid .btn-secondary {
   width: 100%;
   justify-content: center;
+}
+
+.action-span-full {
+  grid-column: 1 / -1;
 }
 
 /* ── Video Queue / Job Status ── */

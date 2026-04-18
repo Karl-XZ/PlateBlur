@@ -21,6 +21,7 @@ Current app features:
 Current web features:
 
 - Upload one or many images in the browser and auto-generate editable plate candidate boxes
+- Open a built-in sample library with bundled road-scene photos and a ready-made rear-plate video clip
 - Apply blur, mosaic, solid block, or brand watermark styles directly on canvas
 - Batch process images and download the current image or the whole batch
 - Upload videos, detect the current frame, add manual track points, and interpolate a time-based track

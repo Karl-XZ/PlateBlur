@@ -5,6 +5,7 @@ This directory contains the browser workstation for PlateBlur.
 Included features:
 
 - Image upload and batch redaction
+- Built-in sample library for bundled photos and a ready-made video clip
 - Editable plate candidate boxes
 - Blur, mosaic, solid, and brand watermark styles
 - Video current-frame detection

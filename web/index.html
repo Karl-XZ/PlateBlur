@@ -7,10 +7,10 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="src/styles/main.css" />
-  <link rel="stylesheet" href="src/styles/sidebar.css" />
-  <link rel="stylesheet" href="src/styles/canvas.css" />
-  <link rel="stylesheet" href="src/styles/panels.css" />
+  <link rel="stylesheet" href="src/styles/main.css?v=20260418-video-preview-fix1" />
+  <link rel="stylesheet" href="src/styles/sidebar.css?v=20260417-gpu-toggle1" />
+  <link rel="stylesheet" href="src/styles/canvas.css?v=20260418-video-preview-fix1" />
+  <link rel="stylesheet" href="src/styles/panels.css?v=20260417-gpu-toggle1" />
 </head>
 <body>
 
@@ -108,8 +108,12 @@
           <h2 class="upload-title">拖拽文件到这里</h2>
           <p class="upload-sub">支持 JPG · PNG · WEBP · MP4 · MOV · AVI，单文件最高 500MB</p>
           <div class="upload-divider"><span>或</span></div>
-          <button class="btn-primary" id="browseBtn">浏览文件</button>
+          <div class="upload-actions">
+            <button class="btn-primary" id="browseBtn" type="button">浏览文件</button>
+            <button class="btn-secondary" id="openSampleLibraryBtn" type="button">Open Sample Library</button>
+          </div>
           <input type="file" id="fileInput" multiple accept="image/*,video/*" hidden />
+          <p class="upload-samples-meta">Built-in road photos and one rear-plate video are available for quick tests.</p>
           <p class="upload-hint">批量上传时自动识别所有车牌，支持Ctrl/⌘+多选</p>
         </div>
       </div>
@@ -241,13 +245,21 @@
               <span>保留 EXIF 信息</span>
               <label class="toggle"><input type="checkbox" /><span class="toggle-track"><span class="toggle-thumb"></span></span></label>
             </label>
+            
+<label class="toggle-row">
+              <span>深度识别优先 GPU</span>
+              <label class="toggle"><input type="checkbox" id="imagePreferGpuToggle" /><span class="toggle-track"><span class="toggle-thumb"></span></span></label>
+            </label>
+            <div class="toggle-hint" id="imagePreferGpuHint">关闭时固定使用 CPU。开启后会先尝试 GPU，失败后自动回退到 CPU。</div>
           </div>
 
+            
           <div class="action-row action-row-grid">
             <button class="btn-secondary" id="addPlateBtn">添加车牌框</button>
-            <button class="btn-secondary" id="resetPlatesBtn">重新识别</button>
+            <button class="btn-secondary" id="resetPlatesBtn">快速识别</button>
+            <button class="btn-secondary" id="deepDetectBtn">深度识别</button>
             <button class="btn-secondary" id="downloadCurrentImageBtn">下载当前</button>
-            <button class="btn-primary" id="processImagesBtn">
+            <button class="btn-primary action-span-full" id="processImagesBtn">
               <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M2 7h10M7 2l5 5-5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
               处理全部图片
             </button>
@@ -264,11 +276,15 @@
 
     <!-- ════════════════ PANEL: VIDEO ════════════════ -->
     <section class="panel" id="panel-video">
-      <div class="video-layout">
-        <!-- Video Preview -->
-        <div class="video-canvas-wrap">
-          <video id="videoPreview" class="video-preview" controls></video>
-          <div class="video-empty" id="videoEmpty">
+        <div class="video-layout">
+          <!-- Video Preview -->
+          <div class="video-canvas-wrap">
+            <div class="canvas-toolbar video-view-toolbar">
+              <button class="canvas-mode-btn active" id="videoOriginalModeBtn">原视频</button>
+              <button class="canvas-mode-btn" id="videoProcessedModeBtn" disabled>处理结果</button>
+            </div>
+            <video id="videoPreview" class="video-preview" controls></video>
+            <div class="video-empty" id="videoEmpty">
             <svg width="64" height="64" viewBox="0 0 64 64" fill="none">
               <rect x="4" y="12" width="40" height="40" rx="4" stroke="#333" stroke-width="1.5" stroke-dasharray="4 4"/>
               <path d="M44 28l16-8v24l-16-8" stroke="#333" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
@@ -362,8 +378,25 @@
                 <span class="toggle-track"><span class="toggle-thumb"></span></span>
               </label>
             </div>
+            <div class="setting-row">
+              <label>每帧深度识别</label>
+              <label class="toggle">
+                <input type="checkbox" id="videoDeepEveryFrameToggle" />
+                <span class="toggle-track"><span class="toggle-thumb"></span></span>
+              </label>
+            </div>
+            
+<div class="setting-row">
+              <label>深度识别优先 GPU</label>
+              <label class="toggle">
+                <input type="checkbox" id="videoPreferGpuToggle" />
+                <span class="toggle-track"><span class="toggle-thumb"></span></span>
+              </label>
+            </div>
+            <p class="toggle-hint" id="videoPreferGpuHint">关闭时固定使用 CPU。开启后会先尝试 GPU，失败后自动回退到 CPU。</p>
           </div>
 
+            
           <div class="video-job-card" id="videoJobCard">
             <div class="video-job-head">
               <span class="video-job-title">处理进度</span>
@@ -372,7 +405,7 @@
             <div class="video-job-track">
               <div class="video-job-fill" id="videoJobFill"></div>
             </div>
-            <p class="video-job-sub" id="videoJobSub">上传视频并添加追踪点后，可逐帧加水印并导出结果。</p>
+            <p class="video-job-sub" id="videoJobSub">快速模式使用追踪点插值。开启每帧深度识别后，会逐帧调用本地专用检测器。</p>
           </div>
 
           <div class="action-row action-row-grid" style="margin-top:auto">
@@ -575,9 +608,15 @@
                 <option value="8">8</option>
               </select>
             </div>
+            <div class="setting-item">
+              <div class="setting-info">
+                <span class="setting-name">深度识别优先 GPU</span>
+                <span class="setting-desc" id="setPreferGpuDesc">关闭时固定使用 CPU。开启后会先尝试 GPU，失败后自动回退到 CPU。</span>
+              </div>
+              <label class="toggle"><input type="checkbox" id="setPreferGpuToggle" /><span class="toggle-track"><span class="toggle-thumb"></span></span></label>
+            </div>
           </div>
         </div>
-
         <div class="settings-group">
           <div class="settings-group-title">水印设置</div>
           <div class="settings-list">
@@ -645,6 +684,23 @@
     </div>
   </div>
 
-  <script src="src/app.js"></script>
+  <div class="sample-library" id="sampleLibrary" hidden>
+    <div class="sample-library-backdrop" data-sample-close="backdrop"></div>
+    <section class="sample-library-dialog" aria-labelledby="sampleLibraryTitle" aria-modal="true" role="dialog">
+      <header class="sample-library-head">
+        <div class="sample-library-copy">
+          <p class="sample-library-eyebrow">Built-In Samples</p>
+          <h2 id="sampleLibraryTitle">Sample Library</h2>
+          <p>Load bundled photos or a ready-made video clip without uploading your own files.</p>
+        </div>
+        <button class="icon-btn sample-library-close" id="closeSampleLibraryBtn" type="button" aria-label="Close sample library">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M4 4l8 8M12 4l-8 8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+        </button>
+      </header>
+      <div class="sample-library-grid" id="sampleLibraryGrid"></div>
+    </section>
+  </div>
+
+  <script src="src/app.js?v=20260418-video-preview-fix1"></script>
 </body>
 </html>

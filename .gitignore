@@ -9,3 +9,11 @@ xcuserdata/
 # Build products
 build/
 DerivedData/
+
+# Local tooling / generated artifacts
+.playwright-cli/
+reports/
+*.pyc
+__pycache__/
+*.baiduyun.uploading.cfg
+yolov8n.pt
